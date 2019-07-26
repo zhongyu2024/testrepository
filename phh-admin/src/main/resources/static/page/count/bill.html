@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>用户管理-总后台</title>
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <script type="text/javascript" th:src="@{{path}/js/jquery-1.8.3.min.js(path=${contextPath})}"></script>
+	<script type="text/javascript" th:src="@{../layui/layui.js}"></script>
+	<script type="text/javascript" th:src="@{{path}/page/count/bill.js(path=${contextPath})}"></script> 
+
+  </head>
+  <style>
+  	input{
+  		height:30px;
+  	}
+  	select{
+  		height:30px;
+  	}
+  	.search-btn{
+  		width:150px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:30px;
+  		margin-left:50px;
+  		cursor: pointer;
+  	}
+  	.userblock{
+  		margin-top:10px;
+  	}
+  	.line-time{
+  		margin-left:50px;
+  		margin-top:30px;
+  		font-size: 15px;
+  	}
+  	.same-line{
+  		margin-left:30px;
+  	}
+  	#date1,#date2{
+  		margin-left:20px; 
+  	}
+  	
+  </style>
+  
+  <body>
+    <blockquote class="layui-elem-quote layui-bg-green userblock" >
+		<div id="s1">用户管理&gt;普通用户</div>
+	</blockquote>
+	<div class="line-time">
+		<div style="margin-left: 30px;">
+			<div style="float:left;margin-top: 10px;">
+				创建时间：
+			</div>
+			<div style="float:left;margin-left: 20px;">
+				<input type="text" class="layui-input" id="date1" readonly="readonly">
+			</div>
+			<div style="float:left;margin-left: 20px;">
+				<input type="text" class="layui-input" id="date2" readonly="readonly">
+			</div>
+			<div style="float:left;margin-left: 40px;">
+				<span>用户ID：</span>
+				<input type="text" id="user_name">
+				<span>改变的金额：</span>
+				<input type="text" id="phone">
+			</div>
+			
+		</div>
+	</div>
+	<br>
+	<div class="line-time">
+		<div class="search-btn">
+			<span>搜索</span>
+		</div>
+	</div>
+	
+	<div>
+		<table id="userList"></table>
+	</div>
+	
+	<script type="text/html" id="userlistBar">
+		
+		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+	</script>
+	<!-- <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a> -->
+	
+	<script>
+        	
+/*        	function CompanyChange(){
+       		$("#dept").html("<option value='0'>请选择</option>")
+       		var comid=$("#com option:selected").val()
+        		$.ajax({
+		            type:"GET",
+		            url:"/user/api/comsdept",
+		            data:{comid:comid},
+		         	datatype: "json",
+		      		async:false,
+		            success:function(data){
+						for(var i=0;i<data.length;i++){
+							$("#dept").append("<option value="+data[i].dept_id+">"
+							+data[i].dept_name+"</option>")
+						}
+		            }
+        		}); 
+       	}
+       	
+       	$.ajax({
+            type:"GET",
+            url:"/user/api/company",
+         	datatype: "json",
+      		async:false,
+            success:function(data){
+				for(var i=0;i<data.length;i++){
+					$("#com").append("<option value="+data[i].company_id+">"
+					+data[i].company_name+"</option>")
+				}
+            }
+        }); */
+	         	
+	</script>
+	
+  </body>
+</html>

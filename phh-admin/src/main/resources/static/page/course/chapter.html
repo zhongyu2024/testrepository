@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>用户管理</title>
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" th:src="@{../layui/layui.js}"></script>
+	<!-- <script th:src="@{{path}/page/test/chapter.js(path=${contextPath})}"></script>  -->
+
+  </head>
+  <style>
+  	input{
+  		height:30px;
+  	}
+  	select{
+  		height:30px;
+  	}
+  	.add-class{
+  		width:150px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:30px;
+  		margin-left:1%;
+  		cursor: pointer;
+  	}
+  	.add-btn{
+  		width:150px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:10px;
+  		margin-left:5%;
+  		cursor: pointer;
+  	}
+  	.userblock{
+  		margin-top:10px;
+  	}
+  	.line-time{
+  		margin-left:100px;
+  		margin-top:30px;
+  		font-size: 15px;
+  	}
+  	.same-line{
+  		margin-left:30px;
+  	}
+  	#lastTime1,#lastTime2{
+  		width:100px;
+  		height:35px;
+  	}
+  	#s2{
+  		margin-left: 1%;
+  	}
+  	 .layui-form-select dl { max-height:210px; }
+  	
+  </style>
+  
+  <body>
+    <blockquote class="layui-elem-quote layui-bg-green userblock" >
+		<div id="s1">课程管理&gt;章节管理</div>
+	</blockquote>
+	
+	
+	<div style="margin: 20px;">
+	    
+	  <button class="layui-btn layui-btn-primary" id="layerDemo">增加章节</button>
+			<div class="layui-form">
+		  <table class="layui-table">
+		    <colgroup>
+		      <col width="250">
+		      <col width="250">
+		      <col width="200">
+		      <col width="100">
+		    </colgroup>
+		    <thead>
+		      <tr>
+		        <th>课程名</th>
+		        <th>章节名</th>
+		        <th>老师id</th>
+		        <th>创建时间</th>
+		        <th>是否下架</th>
+		        <th>操作</th>
+		      </tr> 
+		    </thead>
+		    <tbody>
+		    
+		      <tr th:each="m:${list}">
+		        <td th:text="${m.course_id}"></td>
+		        <td th:text="${m.tittle}"></td>
+		        <td th:text="${m.teacher_id}"></td>
+		        <td th:text="${#dates.format(m.create_time,'yyyy-MM-dd HH:mm:ss')}"></td>
+		        <td th:text="${m.isDeleteStr}"></td>
+		        <td>
+		             <button class="layui-btn layui-btn-sm layui-btn-normal" th:onclick="'javascript:ddjj('+${m.id}+')' ">修改</button>
+		             <button class="layui-btn layui-btn-sm layui-btn-normal" th:onclick="'javascript:shangjia('+${m.id}+')' ">下架</button> 
+		             <button class="layui-btn layui-btn-sm layui-btn-normal" th:onclick="'javascript:xiajia('+${m.id}+')' ">上架</button>     
+		        </td>
+		      </tr>
+		    </tbody>
+		  </table>
+		</div>
+	</div>
+	<input id="jieshou" type="hidden"/>
+	<button type="button" style="display: none" class="layui-btn" id="test51"><i class="layui-icon"></i>上传视频</button>
+	<script>
+			layui.use(['upload','layer','form'], function(){ //独立版的layer无需执行这一句
+			  var $ = layui.jquery, layer = layui.layer,upload = layui.upload,form = layui.form; //独立版的layer无需执行这一句
+			  
+			    function showNotice(){
+			        layer.open({
+			            type: 1,
+			            title: "添加章节",
+			            area: '50%',
+			            shade: 0.8,
+			            id: 'LAY_layuipro',
+			            moveType: 1,
+			        
+			            content: '<br/><form class="layui-form" action="/add_zhangjie" id="myforms" name="myforms" style="width:90%;">'
+			  			   +'<input type="hidden" name="course_id" id="course_id"/><div class="layui-form-item">'
+			  			 +' <label class="layui-form-label">章节名</label>'
+			  			+' <div class="layui-input-block">'
+			  			+' <input type="text" name="tittle" lay-verify="title" autocomplete="off" placeholder="章节名" class="layui-input">'
+			  			+'  </div>'
+			  			+' </div>'
+			  			+' <div class="layui-form-item">'
+			  			+'<label class="layui-form-label">视频链接</label>'
+			  			+' <div class="layui-input-block">'
+					    +'  <input type="text" name="vedio_url" lay-verify="title" id="shiping_url" autocomplete="off" placeholder="视频链接" class="layui-input">'
+					    +' </div>'
+					    +'</div>'
+					    +'<div class="layui-form-item">'
+					    +'<label class="layui-form-label">上传视频</label>'
+					    +'<div class="layui-input-block">'
+					    +'  <button type="button" class="layui-btn" onclick="dianji()"><i class="layui-icon"></i>上传视频</button>'
+					    +' <code style="margin-left: 10px;color:red"><br/><br/>注意:如果您填写了视频的链接可不用上传视频文件<br/>如果选择手动上传成功之后自动赋值视频链接</code>'
+					    +' </div>'
+					    +'<div class="layui-form-item">'
+					    +'<label class="layui-form-label">主讲老师</label>'
+					    +' <div class="layui-input-block">'
+					    +'<select id="teacher_id" name="teacher_id" style="overflow:auto;height:220px">'
+				   		+'<option value="0">请选择</option>'
+				   		+'</select>'
+					    +' </div>'
+					    +' </div>'
+					    +' </div>  <div class="layui-form-item">'
+					    +'<div class="layui-input-block">'
+					    +' <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>'
+					    +' <button type="reset" class="layui-btn layui-btn-primary">重置</button>'
+					    +' </div>'
+					    +' </div></form>',
+			            
+			            success: function(layero){
+			            },
+			            cancel: function(index, layero){
+			                  
+			            }
+			            
+			        });
+			        addTeacher();
+			      	form.render();
+			    } 
+			  
+			    function showUpdate(){
+			        layer.open({
+			            type: 1,
+			            title: "修改章节",
+			            area: '50%',
+			            shade: 0.8,
+			            id: 'LAY_layuipro',
+			            moveType: 1,
+			        
+			            content: '<br/><form class="layui-form" action="/update_zhangjie" id="myforms" name="myforms" style="width:90%;">'
+			  			   +'<input type="hidden" name="k_id" id="update_course_id"/><div class="layui-form-item">'
+			  			 +' <label class="layui-form-label">章节名</label>'
+			  			+' <div class="layui-input-block">'
+			  			+' <input type="text" name="titles" id="update_tittle" lay-verify="title" autocomplete="off" placeholder="章节名" class="layui-input">'
+			  			+'  </div>'
+			  			+' </div>'
+			  			+' <div class="layui-form-item">'
+			  			+'<label class="layui-form-label">视频链接</label>'
+			  			+' <div class="layui-input-block">'
+					    +'  <input type="text" name="fileName_url" lay-verify="title" id="shiping_url" autocomplete="off" placeholder="视频链接" class="layui-input">'
+					    +' </div>'
+					    +'</div>'
+					    +'<div class="layui-form-item">'
+					    +'<label class="layui-form-label">上传视频</label>'
+					    +'<div class="layui-input-block">'
+					    +'  <button type="button" class="layui-btn" onclick="dianji()"><i class="layui-icon"></i>上传视频</button>'
+					    +' <code style="margin-left: 10px;color:red"><br/><br/>注意:如果您填写了视频的链接可不用上传视频文件<br/>如果选择手动上传成功之后自动赋值视频链接</code>'
+					    +' </div>'
+					    +'<div class="layui-form-item">'
+					    +'<label class="layui-form-label">主讲老师</label>'
+					    +' <div class="layui-input-block">'
+					    +'<select id="up_teacher_id" name="teacher_id">'
+				   		+'<option value="0">请选择</option>'
+				   		+'</select>'
+					    +' </div>'
+					    +' </div>'
+					    +' </div>  <div class="layui-form-item">'
+					    +'<div class="layui-input-block">'
+					    +' <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>'
+					    +' <button type="reset" class="layui-btn layui-btn-primary">重置</button>'
+					    +' </div>'
+					    +' </div></form>',
+			            
+			            success: function(layero){
+			            },
+			            cancel: function(index, layero){
+			                  
+			            }
+			        });
+			    } 
+			  
+			   //监听提交
+			    form.on('submit(demo1)', function(data){
+			      $("#course_id").val(GetQueryString("courseId"));
+			      var targetUrl = $("#myforms").attr("action");    
+				      var data = $("#myforms").serialize();
+				      console.log(data)     
+				       $.ajax({ 
+				        type:'post',  
+				        url:targetUrl, 
+				        cache: false,
+				        data:data,  
+				        dataType:'text', 
+				        success:function(data){      
+				           if(data.indexOf("成功")!=-1){
+				        	   layer.closeAll();
+				        	   layer.msg(data);
+				        	   setTimeout(function(){
+				        		   location.reload();
+				        	   },2000);
+				           }
+				        },
+				        error:function(){ 
+				         alert("请求失败")
+				        }
+			       })
+			      return false;
+			    });
+			   
+			    function GetQueryString(name)
+			    {
+			         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+			         var r = window.location.search.substr(1).match(reg);
+			         if(r!=null)return  unescape(r[2]); return null;
+			    }
+			    var index = null;
+			    upload.render({
+			        elem: '#test51'
+			        ,url: '/uploadVideo'
+			        ,accept: 'video' //视频
+			        ,field:"layuiVideo"
+			        ,before:function(){
+			        	index = layer.load(1, {
+			        		  shade: [0.2,'#fff'], //0.1透明度的白色背景
+			        		  time:80000
+			        		});
+			        }
+			        ,done: function(res){
+			        	layer.close(index);
+                       if(res.code==1){
+      		                         layer.alert(res.message,5);
+      		                    }
+      		                     if(res.error>0){
+      		                          return layer.msg(res.message);
+      		                     }
+      		                      if(res.error==0){
+      		                    	 //res.url
+      		                    	 $("#shiping_url").val(res.url);
+      		                    	layer.msg("视频上传成功！");
+      		                     }
+      		                }
+      		                ,error:function () {
+      		                    var demoText = $('#demoText');
+      		                     demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+      		                    demoText.find('.demo-reload').on('click', function () {
+      		                         uploadInst.upload();
+      		                     });
+      		               }
+			      });
+			  
+			  $('#layerDemo').on('click', function(){
+				  showNotice();
+			   });
+			  
+			  $('#jieshou').on('click', function(){
+				  var id_ = $(this).val();
+			       $.ajax({ 
+			        type:'post',  
+			        url:"/get_zhangjie?k_id="+id_, 
+			        cache: false,
+			        dataType:'json', 
+			        success:function(data){      
+			              console.log(data)
+			              showUpdate();
+			              addTeacher();
+			              $("#update_tittle").val(data.tittle);
+			              $("#update_course_id").val(data.id);
+			              $("#shiping_url").val(data.vedio_url);
+			              $("#up_teacher_id").find("option[value='"+data.teacher_id+"']").attr("selected",true);
+			              form.render();
+			        },
+			        error:function(){ 
+			         alert("请求失败")
+			        }
+		        })
+				 
+			   });
+			  
+			});
+			
+			function ddjj(ids,name,url){
+				  $("#jieshou").val(ids);
+				  $("#jieshou").trigger("click");
+			  }
+			
+			function dianji(){
+				$("#test51").trigger("click");
+			}
+			
+			function shangjia(ids){
+				 var htmlobj=$.ajax({url:"/dw_zhangjie?k_id="+ids+"&type=0",async:false});
+				 layer.msg(htmlobj.responseText);
+				 setTimeout(function(){
+	        		   location.reload();
+	        	   },2000);
+			}
+			
+			function xiajia(ids){
+				 var htmlobj=$.ajax({url:"/dw_zhangjie?k_id="+ids+"&type=1",async:false});
+				 layer.msg(htmlobj.responseText);
+				 setTimeout(function(){
+	        		   location.reload();
+	        	   },2000);
+			}
+			
+			function addTeacher(){
+				$("#teacher_id").html('')
+				$("#up_teacher_id").html('')
+				$.ajax({
+			            type:"GET",
+			            url:"/courseapi/getTeacher",
+			         	datatype: "json",
+			      		async:false,
+			            success:function(data){
+			            	//console.log(data)
+			            	for(var i=0;i<data.length;i++){
+								$("#teacher_id").append("<option value='"+data[i].id+"'>"+
+									data[i].teacher_name+"</option>")
+									
+									$("#up_teacher_id").append("<option value='"+data[i].id+"'>"+
+									data[i].teacher_name+"</option>")
+							}
+			            },
+			            error: function (jqXHR, textStatus, errorThrown) {
+		           			alert('error')
+		       			}
+		         	});
+    		}
+			</script>
+	
+  </body>
+</html>

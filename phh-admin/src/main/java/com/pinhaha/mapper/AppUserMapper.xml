@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pinhaha.mapper.AppUserMapper">
+	<select id="selectByInviteUserId" parameterType="java.lang.Long" resultType="com.pinhaha.pojo.AppUser">
+		select * from app_user where invitation_user_id=#{userId}
+	</select>
+	
+	<select id="selectByInviteCode" resultType="com.pinhaha.pojo.AppUser">
+		select * from app_user where invite_code=#{inviteCode}
+	</select>
+	
+	<select id="selectByPhone" parameterType="java.lang.String" resultType="com.pinhaha.pojo.AppUser">
+		select * from app_user where phone=#{phone}
+	</select>
+	
+	<select id="selectByUserName" parameterType="java.lang.String" resultType="com.pinhaha.pojo.AppUser">
+		select * from app_user where user_name=#{userName}
+	</select>
+	
+	<select id="getNextLevelByUserId" resultType="java.util.HashMap">
+		SELECT d.*,e.member_name FROM (SELECT a.user_name,a.id,a.member_level_id,
+			(SELECT COUNT(b.id) FROM app_user b WHERE b.invitation_user_id=a.id) AS inviteNum,
+			(SELECT IFNULL(SUM(c.change_num),0) FROM app_point c WHERE a.id=c.user_id) AS pointNum  FROM 
+			(SELECT * FROM app_user WHERE invitation_user_id=#{userId} ) a
+		) d LEFT JOIN member_level e ON d.member_level_id=e.id
+	</select>
+	
+	<select id="getMemberListByMemberType" resultType="java.util.HashMap">
+		SELECT a.id,a.phone,a.`user_name`,b.`member_name`,a.`member_level_end_time` FROM app_user a LEFT JOIN 
+		member_level b ON a.`member_level_id` =b.`id`
+		WHERE b.`type`=#{type} and a.phone like '%${phone}%' and a.user_name like '%${userName}%' 
+	</select>
+	
+	<select id="userList" resultType="com.pinhaha.pojo.AppUser">
+		select * from app_user 
+		limit #{page},#{limit}
+	</select>
+	
+	<select id="userListNum" resultType="Integer">
+		select count(*) from app_user 
+	</select>
+	
+	<update id="updateUser">
+		update app_user set is_active=#{param1},is_delete=#{param2} where id=#{param3}
+	</update>
+	
+
+	
+	<select id="getUserByParams" parameterType="map" resultType="com.pinhaha.pojo.AppUser">
+		SELECT  u.*,m.*,up_user.`phone` AS upPhone  FROM app_user u
+		LEFT JOIN member_level m ON u.member_level_id=m.id LEFT JOIN app_user up_user ON u.`invitation_user_id` = up_user.`id`
+		where 
+			1=1 and u.is_delete=0
+			<if test="timetype=1 and date1!=null and date1!='' 
+				and date2!=null and date2!=''">
+				and u.create_time between #{date1} and #{date2}
+			</if>
+			<if test="timetype=2 and date1!=null and date1!='' 
+				and date2!=null and date2!=''">
+				and u.member_level_end_time between #{date1} and #{date2}
+			</if>
+			<if test="user_name!=null and user_name!=''">
+				and u.user_name=#{user_name}
+			</if>
+			<if test="phone!=null and phone!=''">
+				and u.phone=#{phone}
+			</if>
+			<!-- <if test="invite_code!=null and invite_code!=''">
+				and invite_code=#{invite_code}
+			</if> -->
+			<if test="province_id !=0 and province_id !=null and province_id!=''">
+				and u.province_id=#{province_id}
+			</if>
+			<if test="city_id !=0 and city_id !=null and city_id!=''">
+				and u.city_id=#{city_id}	
+			</if>
+			<if test="member_level_id!=0 and member_level_id !=null and member_level_id!=''"> 
+				<if test="member_level_id == '-1'"> 
+					and u.member_level_id is null
+				</if>
+				<if test="member_level_id != '-1'"> 
+					and u.member_level_id=#{member_level_id}
+				</if>
+				
+			</if>
+		order by u.id desc
+	</select>
+	
+	
+	<select id="getUserByParamsCount" parameterType="map" resultType="int">
+		select  count(1)  from app_user u
+		left join member_level m on u.member_level_id=m.id
+		where 
+			1=1 and is_delete=0
+			<if test="timetype=1 and date1!=null and date1!='' 
+				and date2!=null and date2!=''">
+				and u.create_time between #{date1} and #{date2}
+			</if>
+			<if test="timetype=2 and date1!=null and date1!='' 
+				and date2!=null and date2!=''">
+				and u.member_level_end_time between #{date1} and #{date2}
+			</if>
+			<if test="user_name!=null and user_name!=''">
+				and user_name=#{user_name}
+			</if>
+			<if test="phone!=null and phone!=''">
+				and phone=#{phone}
+			</if>
+			<!-- <if test="invite_code!=null and invite_code!=''">
+				and invite_code=#{invite_code}
+			</if> -->
+			<if test="province_id !=0 and province_id !=null and province_id!=''">
+				and province_id=#{province_id}
+			</if>
+			<if test="city_id !=0 and city_id !=null and city_id!=''">
+				and city_id=#{city_id}	
+			</if>
+			<if test="member_level_id!=0 and member_level_id !=null and member_level_id!=''"> 
+				and member_level_id=#{member_level_id}
+			</if>
+	</select>
+	
+	
+
+	<select id="getVipUser" parameterType="map" resultType="com.pinhaha.pojo.AppUser">
+		select *  from app_user u
+		left join member_level m on u.member_level_id=m.id
+		where m.id is not null
+		order by u.create_time desc
+		
+	</select>
+
+	<select id="getlevel" resultType="MemberLevel">
+		select * from member_level 
+	</select>
+	
+	<select id="allgetmoneyinfo" resultType="UserGetMoney">
+		select * from user_get_money m
+		left join app_user u on u.id=m.user_id
+		where 1=1
+			<!-- <if test="is_check!=2">
+				and m.is_check=#{is_check}
+			</if> -->
+			<if test="is_pay!=2">
+				and m.is_pay=#{is_pay}
+			</if>
+			<if test="get_way!=0">
+				and m.get_way=#{get_way}
+			</if>
+			<if test="user_name!=null and user_name!=''">
+				and u.user_name=#{user_name}
+			</if>
+			<if test="order_sn!=null and order_sn!=''">
+				and order_sn=#{order_sn}
+			</if>
+	</select>
+	
+	<update id="updateGetMoney">
+		update user_get_money set is_pay=#{param1},order_sn=#{param2}
+		where id=#{param3} and is_pay=0
+	</update>
+	
+</mapper>

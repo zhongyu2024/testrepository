@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pinhaha.mapper.MemberOrderMapper">
+	<select id="selectByOrderNo" resultType="com.pinhaha.pojo.MemberOrder">
+		select * from member_order where order_no=#{orderNo}
+	</select>
+	
+	<select id="getOrdersByUserIdAndIsPay" resultType="com.pinhaha.pojo.MemberOrder">
+		select * from member_order where user_id=#{userId} and is_pay=#{isPay}
+	</select>
+	<select id="countMemberOrder" resultType="int">
+		select count(1) from member_order where user_id=#{userId} and is_pay=1 and member_id=#{memberId} and order_type=5 
+		and DATE_FORMAT( create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+	</select>
+	
+	
+	<select id="countMemberOrderUserBuy" resultType="int">
+		select count(1) from member_order where user_id=#{userId} and is_pay=1 and member_id=#{memberId} and order_type=3 
+		and DATE_FORMAT( create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+	</select>
+	
+</mapper>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>短信验证</title>
+	
+    <meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet"  th:href="@{{path}/layui/css/layui.css(path=${contextPath})}" media="all" />
+	 <script type="text/javascript" th:src="@{../../layui/layui.js}"></script>
+    <script type="text/javascript" th:src="@{../../js/table.js}"></script>
+	<script th:src="@{{path}/jq/jquery-1.8.3.min.js(path=${contextPath})}"></script>
+	<script th:src="@{{path}/jq/jquery.cookie.js(path=${contextPath})}"></script>
+  </head>
+  
+  <body>
+	<div class="layui-form layui-container" id="vue1">
+		<blockquote class="layui-elem-quote layui-text" style="margin-top:400px;">
+				<div class="layui-input-inline" style>
+					<input type="text" class="layui-input checkValue" placeholder="请输入验证码" />
+				</div>
+				<a class="layui-btn" onclick="checkNum();">确定</a>
+				<a class="layui-btn" onclick="sendSms();" id="sendButton">发送验证码</a>
+		</blockquote>
+	</div>
+  </body>
+  	<script>
+  		function checkNum(){
+  			var num=$(".checkValue").val();
+  			if(num==''){
+  				layer.msg("请输入验证码！")
+  				return;
+  			}
+  			$.ajax({
+	            type:"POST",
+	            url:"/userapi/checkMobile",
+	            data:{num:num},
+	         	datatype: "json",
+	      		async:false,
+	            success:function(result){
+	            	if(result==1){
+	            		window.location.href=$.cookie('refund_url');
+	            	}else{
+	            		layer.msg("验证码错误！")
+	            	}
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	            	layer.msg("服务器异常！")
+	            }
+	    		});
+  			
+  		}
+  		
+  		
+  		function sendSms(){
+  			$.ajax({
+	            type:"POST",
+	            url:"/userapi/sendms",
+	         	datatype: "json",
+	      		async:false,
+	            success:function(result){
+	            	if(result==1){
+	            		$("#sendButton").removeClass("layui-btn");
+	          			$("#sendButton").addClass("layui-btn layui-btn-disabled");
+	          			$("#sendButton").removeAttr("onclick");
+	            		layer.msg('发送成功！', {icon: 1});
+	            	}else{
+	            		layer.msg('发送失败,请重试！', {icon: 1});
+	            	}
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	            	layer.msg("修改失败！")
+	            }
+	    		});
+  			
+  		}
+  	</script>
+</html>

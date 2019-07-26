@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pinhaha.mapper.UserGetVoucherMoneyMapper">
+
+	<select id="getVoucherMoneyApply" resultType="UserGetVoucherMoney">
+		select * from user_get_voucher_money m
+		left join app_user u on u.id=m.user_id
+		where 1=1
+			<!-- <if test="is_check!=2">
+				and m.is_check=#{is_check}
+			</if> -->
+			<if test="is_pay!=2">
+				and m.is_pay=#{is_pay}
+			</if>
+			<if test="get_way!=0">
+				and m.get_way=#{get_way}
+			</if>
+			<if test="user_name!=null and user_name!=''">
+				and u.user_name=#{user_name}
+			</if>
+			<if test="order_sn!=null and order_sn!=''">
+				and order_sn=#{order_sn}
+			</if>
+	</select>
+	
+	<update id="updateGetVoucherMoney">
+		update user_get_voucher_money set is_pay=#{param1},order_sn=#{param2}
+		where id=#{param3} and is_pay=0
+	</update>
+	
+	
+</mapper>

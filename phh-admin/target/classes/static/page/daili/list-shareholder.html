@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>文章列表--layui后台管理模板 2.0</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="../../layui/css/layui.css" th:href="@{{path}/layui/css/layui.css(path=${contextPath})}" media="all" />
+	<link rel="stylesheet" href="../../css/public.css" th:href="@{{path}/css/public.css(path=${contextPath})}" media="all" />
+</head>
+<body class="childrenBody">
+<form class="layui-form">
+	<blockquote class="layui-elem-quote quoteBox">
+		<form class="layui-form">
+			<div class="layui-inline">
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input searchVal" placeholder="请输入搜索的用户名" />
+				</div>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input searchPhone" placeholder="请输入搜索的手机号" />
+				</div>
+				<a class="layui-btn search_btn" data-type="reload">搜索</a>
+			</div>
+			<div class="layui-inline">
+				<a class="layui-btn layui-btn-normal addPartner">添加股东</a>
+			</div>
+		</form>
+	</blockquote>
+	<div class="layui-inline" style="display:none" class="addDiv">
+		<div class="layui-input-inline">
+		<input type="text" class="layui-input addPhone" placeholder="请输入要添加的用户绑定手机号" />
+		</div>	<a class="layui-btn layui-btn-normal addNews_btn">添加</a>
+	</div>
+	<table id="newsList" lay-filter="newsList"></table>
+	<!--审核状态-->
+	<script type="text/html" id="newsStatus">
+		{{#  if(d.newsStatus == "1"){ }}
+		<span class="layui-red">等待审核</span>
+		{{#  } else if(d.newsStatus == "0"){ }}
+		<span class="layui-blue">已存草稿</span>
+		{{#  } else { }}
+			审核通过
+		{{#  }}}
+	</script>
+
+	<!--操作-->
+	<script type="text/html" id="newsListBar">
+		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	</script>
+</form>
+<script type="text/javascript" src="../../layui/layui.js" th:src="@{{path}/layui/layui.js(path=${contextPath})}"></script>
+<script th:src="@{{path}/page/daili/list-shareholder.js(path=${contextPath})}"></script>
+</body>
+</html>

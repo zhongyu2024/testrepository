@@ -1,0 +1,130 @@
+{
+	"contentManagement": [
+		{
+			"title": "公开题目",
+			"icon": "&#xe630;",
+			"href": "/admin/testbase/testbase?test_base_name=公开题库",
+			"spread": false
+		},
+		{
+			"title": "抽考题目",
+			"icon": "&#xe630;",
+			"href": "/admin/testbase/testbase?test_base_name=抽考题库",
+			"spread": false
+		},
+		{
+			"title": "内部题目",
+			"icon": "&#xe630;",
+			"href": "/admin/testbase/testbase?test_base_name=内部题库",
+			"spread": false
+		},
+		{
+			"title": "试卷导出-查询试卷",
+			"icon": "&#xe630;",
+			"href": "/admin/testexport/export",
+			"spread": false
+		},
+		{
+			"title": "普通用户",
+			"icon": "&#xe630;",
+			"href": "/simpleUser1",
+			"spread": false
+		},
+		{
+			"title": "密码管理",
+			"icon": "&#xe630;",
+			"href": "/changePwd",
+			"spread": false
+		},
+		{
+			"title": "升级习题",
+			"icon": "&#xe630;",
+			"href": "/uplevtest",
+			"spread": false
+		},
+		{
+			"title": "章节分类",
+			"icon": "&#xe630;",
+			"href": "/chapterManage",
+			"spread": false
+		},
+		{
+			"title": "其他页面",
+			"icon": "&#xe630;",
+			"href": "",
+			"spread": false,
+			"children": [
+				{
+					"title": "404页面",
+					"icon": "&#xe61c;",
+					"href": "page/404.html",
+					"spread": false
+				},
+				{
+					"title": "登录",
+					"icon": "&#xe609;",
+					"href": "/login/login",
+					"spread": false,
+					"target": "_blank"
+				}
+			]
+		}
+	],
+	"memberCenter": [
+		{
+			"title": "用户中心",
+			"icon": "&#xe612;",
+			"href": "page/user/userList.html",
+			"spread": false
+		},
+		{
+			"title": "会员等级",
+			"icon": "icon-vip",
+			"href": "page/user/userGrade.html",
+			"spread": false
+		}
+	],
+	"systemeSttings": [
+		{
+			"title": "系统基本参数",
+			"icon": "&#xe631;",
+			"href": "page/systemSetting/basicParameter.html",
+			"spread": false
+		},{
+			"title": "系统日志",
+			"icon": "icon-log",
+			"href": "page/systemSetting/logs.html",
+			"spread": false
+		},{
+			"title": "友情链接",
+			"icon": "&#xe64c;",
+			"href": "page/systemSetting/linkList.html",
+			"spread": false
+		},{
+			"title": "图标管理",
+			"icon": "&#xe857;",
+			"href": "page/systemSetting/icons.html",
+			"spread": false
+		}
+	],
+	"seraphApi": [
+		{
+			"title": "三级联动模块",
+			"icon": "icon-mokuai",
+			"href": "page/doc/addressDoc.html",
+			"spread": false
+		},{
+			"title": "bodyTab模块",
+			"icon": "icon-mokuai",
+			"href": "page/doc/bodyTabDoc.html",
+			"spread": false
+		},{
+			"title": "三级菜单",
+			"icon": "icon-mokuai",
+			"href": "page/doc/navDoc.html",
+			"spread": false
+		}
+	]
+}
+
+

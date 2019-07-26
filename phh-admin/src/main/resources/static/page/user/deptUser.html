@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>用户管理</title>
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" th:src="@{../layui/layui.js}"></script>
+	<script th:src="@{{path}/page/user/deptUser.js(path=${contextPath})}"></script> 
+
+  </head>
+  <style>
+  	input{
+  		height:30px;
+  	}
+  	select{
+  		height:30px;
+  	}
+  	.search-btn,.add-btn,.add-con{
+  		width:150px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:30px;
+  		margin-left:50px;
+  		cursor: pointer;
+  	}
+  	.add-con{
+  		width:250px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:30px;
+  		margin-left:40px;
+  		cursor: pointer;
+  	}
+  	.userblock{
+  		margin-top:10px;
+  	}
+  	.line-time{
+  		margin-left:100px;
+  		margin-top:30px;
+  		font-size: 15px;
+  		float: left;
+  	}
+  	.same-line{
+  		margin-left:30px;
+  	}
+  	#lastTime1,#lastTime2{
+  		width:100px;
+  		height:35px;
+  	}
+  	#searchBtn{
+  		float: left;
+  	}
+  	#userList{
+  		margin-top: 120px;
+  	}
+  	.a-div{
+  		margin-left: 20px;
+  		margin-top: 20px;
+  		
+  	}
+  	.a-input{
+  		width: 200px;	
+  	}
+  	.a-sel{
+  		width: 95px;
+  	}
+  	
+  	
+  </style>
+  
+  <body>
+    <blockquote class="layui-elem-quote layui-bg-green userblock" >
+		<div id="s1">用户管理&gt;部门账户</div>
+	</blockquote>
+	<div class="line-time">
+		<div>
+			<span class="same-line">所属部门：</span>
+			<select id="com" onchange="CompanyChange()">
+				<option value="0">请选择</option>
+			</select>
+			<select id="dept">
+				<option value="0">请选择</option>
+			</select>
+			<span>账号名称：</span>
+			<input type="text" value="" id="account_name"> 
+			
+			<span>登录账号：</span>
+			<input type="text" id="user_name">
+			
+		</div>
+		<div class="add-btn" id="addBtn">
+			<span>新增账户</span>
+		</div>
+		
+	</div>
+	
+	<div class="search-btn" id="searchBtn">
+			<span>搜索</span>
+	</div>
+		
+	<br>
+	<div>
+		<table id="userList" lay-filter="userList"></table>
+	</div>
+	
+	<!--操作-->
+	<script type="text/html" id="userlistBar">
+		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	</script>
+	
+	<script>
+			  $.ajax({
+		            type:"GET",
+		            url:"/user/api/company",
+		         	datatype: "json",
+		      		async:false,
+		            success:function(data){
+						for(var i=0;i<data.length;i++){
+							$("#com").append("<option value="+data[i].company_id+">"
+							+data[i].company_name+"</option>")
+						}
+		            }
+	         	});
+	         	
+	         	function CompanyChange(){
+	         		$("#dept").html("<option value='0'>请选择</option>")
+	         		var comid=$("#com option:selected").val()
+		         		$.ajax({
+			            type:"GET",
+			            url:"/user/api/comsdept",
+			            data:{comid:comid},
+			         	datatype: "json",
+			      		async:false,
+			            success:function(data){
+							for(var i=0;i<data.length;i++){
+								$("#dept").append("<option value="+data[i].dept_id+">"
+								+data[i].dept_name+"</option>")
+							}
+			            }
+		         	}); 
+	         	}
+	         	
+	         	$.ajax({
+		            type:"GET",
+		            url:"/user/api/level",
+		         	datatype: "json",
+		      		async:false,
+		            success:function(data){
+						for(var i=0;i<data.length;i++){
+							$("#levelOp").append("<option value="+data[i].user_lev_id+">"
+							+data[i].user_lev+"</option>")
+						}
+		            }
+	         	});  
+	         	
+	         	
+    	
+	         	
+	</script>
+	
+	<div id="t">
+	  	<div class="a-div">
+	  		所属部门：
+	  		<select class="a-sel">
+	  			<option value="0">请选择</option>
+	  		</select>
+	  		<select class="a-sel">
+	  			<option value="0">请选择</option>
+	  		</select>
+	  	</div>
+	  	<div class="a-div">
+	  		账号名称：<input type="text" class="a-input">
+	  	</div>
+	  	<div class="a-div">
+	  		登录账号：<input type="text" class="a-input">
+	  	</div>
+	  	<div class="a-div">
+	  		登录密码：<input type="text" class="a-input">
+	  	</div>
+	  	<div class="a-div">
+	  		确认密码：<input type="text" class="a-input">
+	  	</div>
+
+	  	<div class="add-con">确认新增</div>
+	</div>
+	
+	
+  </body>
+  
+  
+</html>

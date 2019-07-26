@@ -1,0 +1,217 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 19,
+  "data": [
+    {
+      "id": 1,
+      "name": "导航管理",
+      "lev": 12,
+      "isShow": null,
+      "show_style": "layui-icon-set",
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": null,
+      "change": 0,
+      "parentId": -1
+    },
+    {
+      "id": 2,
+      "name": "火车",
+      "lev": 1,
+      "isShow": "system/user",
+      "show_style": null,
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": null,
+      "change": 0,
+      "parentId": 1
+    },
+    
+    {
+      "id": 4,
+      "name": "铁路",
+      "lev": 4,
+      "isShow": null,
+      "show_style": null,
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "user:add",
+      "change": 0,
+      "parentId": 2
+    },
+    {
+      "id": 5,
+      "name": "高铁",
+      "lev": 5,
+      "isShow": null,
+      "show_style": null,
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "user:edit",
+      "change": 0,
+      "parentId": 2
+    },
+    {
+      "id": 6,
+      "name": "删除用户",
+      "lev": 6,
+      "isShow": null,
+      "show_style": null,
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "user:delete",
+      "change": 0,
+      "parentId": 2
+    },
+    {
+      "id": 7,
+      "name": "飞机",
+      "lev": 1,
+      "isShow": "system/role",
+      "show_style": null,
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": null,
+      "change": 0,
+      "parentId": 1
+    },
+    {
+      "id": 8,
+      "name": "查询角色",
+      "lev": 8,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/07/21 13:54:59",
+      "tset_number": "role:view",
+      "change": 0,
+      "parentId": 7
+    },
+    {
+      "id": 9,
+      "name": "添加角色",
+      "lev": 9,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "role:add",
+      "change": 0,
+      "parentId": 7
+    },
+    {
+      "id": 10,
+      "name": "修改角色",
+      "lev": 10,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "role:edit",
+      "change": 0,
+      "parentId": 7
+    },
+    {
+      "id": 11,
+      "name": "删除角色",
+      "lev": 11,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "role:delete",
+      "change": 0,
+      "parentId": 7
+    },
+    {
+      "id": 3,
+      "name": "查询用户",
+      "lev": 3,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/07/21 13:54:16",
+      "tset_number": "user:view",
+      "change": 0,
+      "parentId": 12
+    },
+    {
+      "id": 12,
+      "name": "角色权限管理",
+      "lev": 1,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "role:auth",
+      "change": 0,
+      "parentId": 1
+    },
+    {
+      "id": 13,
+      "name": "权限管理",
+      "lev": 13,
+      "isShow": "system/authorities",
+      "show_style": null,
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": null,
+      "change": 0,
+      "parentId": 12
+    },
+    {
+      "id": 14,
+      "name": "查询权限",
+      "lev": 14,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/07/21 13:55:57",
+      "tset_number": "authorities:view",
+      "change": 0,
+      "parentId": 12
+    },
+    {
+      "id": 15,
+      "name": "添加权限",
+      "lev": 15,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "authorities:add",
+      "change": 0,
+      "parentId": 12
+    },
+    {
+      "id": 16,
+      "name": "修改权限",
+      "lev": 16,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/07/13 09:13:42",
+      "tset_number": "authorities:edit",
+      "change": 0,
+      "parentId": 12
+    },
+    {
+      "id": 17,
+      "name": "删除权限",
+      "lev": 17,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": "authorities:delete",
+      "change": 0,
+      "parentId": 12
+    },
+    {
+      "id": 18,
+      "name": "登录日志",
+      "lev": 1,
+      "isShow": "system/loginRecord",
+      "show_style": null,
+      "lev_number": "2018/06/29 11:05:41",
+      "tset_number": null,
+      "change": 0,
+      "parentId": 1
+    },
+    {
+      "id": 19,
+      "name": "查询登录日志",
+      "lev": 19,
+      "isShow": "",
+      "show_style": "",
+      "lev_number": "2018/07/21 13:56:43",
+      "tset_number": "loginRecord:view",
+      "change": 0,
+      "parentId": 18
+    }
+  ]
+}

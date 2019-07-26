@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>代理管理</title>
+	
+    <meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet"  th:href="@{{path}/layui/css/layui.css(path=${contextPath})}" media="all" />
+
+  </head>
+  
+  <body>
+  	
+  	<blockquote class="layui-elem-quote layui-bg-green" style="margin-top:10px;" >
+		<div>代理管理&gt;添加会员</div>
+	</blockquote>
+	<form class="layui-form layui-container" id="daili-vue">
+		<blockquote class="layui-elem-quote layui-text" style="margin-top:30px;">
+				<div class="layui-form-item">
+				<div class="layui-input-inline">
+					邀请码（<span style="color:red;" >选填</span>）：
+				</div>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" placeholder="请输入邀请码" name="code" />
+				</div>
+				<div class="layui-input-inline">
+					手机号（<span style="color:red;" >必填</span>）：
+				</div>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" name="phone" lay-verify="required|phone|number" placeholder="请输入用户的手机号" />
+				</div>
+				<div class="layui-input-inline">
+					<select name="levelId">
+						<option value="1" >VIP学员</option>
+						<option value="2">钻石VIP</option>
+						<option value="3">发起合伙人</option>
+						<option value="4">高级合伙人</option>
+					</select>
+				</div>
+				<button class="layui-btn" lay-submit lay-filter="uplev">升级会员</button>
+				<button class="layui-btn" onclick="function(){window.location.reload()}">刷新</button>
+				</div>
+		</blockquote>
+  </form>
+  
+  	<div>
+		<table id="userList"></table>
+	</div>
+  
+  </body>
+	
+    <script th:src="@{{path}/layui/layui.js(path=${contextPath})}"></script>
+	<script th:src="@{{path}/vue/vue.min.js(path=${contextPath})}"></script>
+	<script th:src="@{{path}/page/daili/add_lev1.js(path=${contextPath})}"></script>
+</html>

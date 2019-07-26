@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>用户管理</title>
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" th:src="@{../layui/layui.js}"></script>
+	<script th:src="@{{path}/page/test/chapterManage.js(path=${contextPath})}"></script> 
+
+  </head>
+  <style>
+  	input{
+  		height:30px;
+  	}
+  	select{
+  		height:30px;
+  	}
+  	.add-class{
+  		width:150px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:30px;
+  		margin-left:1%;
+  		cursor: pointer;
+  	}
+  	.add-btn{
+  		width:150px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:10px;
+  		margin-left:5%;
+  		cursor: pointer;
+  	}
+  	.userblock{
+  		margin-top:10px;
+  	}
+  	.line-time{
+  		margin-left:100px;
+  		margin-top:30px;
+  		font-size: 15px;
+  	}
+  	.same-line{
+  		margin-left:30px;
+  	}
+  	#lastTime1,#lastTime2{
+  		width:100px;
+  		height:35px;
+  	}
+  	#s2{
+  		margin-left: 1%;
+  	}
+  	
+  	
+  	
+  </style>
+  
+  <body>
+    <blockquote class="layui-elem-quote layui-bg-green userblock" >
+		<div id="s1">分类管理&gt;导航管理</div>
+	</blockquote>
+	<div id="s2">所属上级：<span id="master"></span></div>
+		<div class="add-class" lay-event="add">
+			<span>添加分类</span>
+		</div>
+	
+	<div>
+		<table id="chapterlist" lay-filter="chapterlist"></table>
+	</div>
+	<!--操作-->
+	<script type="text/html" id="chapterlistBar">
+		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+		<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="up">上移</a>
+		<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="down">下移</a>
+	</script>
+	
+<!-- 	<input type="checkbox" id="show"> -->
+	
+	<script>
+				var dept_id=null
+	         	//获取用户部门
+	         	$.ajax({
+		            type:"GET",
+		            url:"/user/api/getUser",
+		         	datatype: "json",
+		      		async:false,
+		            success:function(data){
+						dept_id = data.user_dept_id
+		            },
+		            error: function (jqXHR, textStatus, errorThrown) {
+            			alert('error')
+        			}
+	         	});
+	         	
+	         	$.ajax({
+		            type:"GET",
+		            url:"/user/api/getDept",
+		            data:{id:dept_id},
+		         	datatype: "json",
+		      		async:false,
+		            success:function(data){
+						dept_name = data.dept_name
+						company_name = data.company_name
+		            },
+		            error: function (jqXHR, textStatus, errorThrown) {
+            			alert('error')
+        			}
+	         	});
+	         	$("#master").html(company_name+"&gt;"+dept_name)
+	         	
+	         	
+	         	
+	         	/* $("input").on("click", function () {
+					var $this = $(this);
+				if($this.is(":checked")){
+				//选中的时候你的操作
+					alert(11)
+					}else{
+				//未选中的时候你的操作
+					alert(122)
+					}
+				}); */
+    
+	         	
+	</script>
+	
+  </body>
+</html>

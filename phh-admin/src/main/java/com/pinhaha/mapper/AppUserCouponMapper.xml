@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pinhaha.mapper.AppUserCouponMapper">
+	<update id="changeCouponByUserAndChangeNum">
+		update app_user_coupon set course_total=course_total + #{changeNum},update_time=now()
+		where (course_total + #{changeNum})>=0 and id=#{id} 
+	</update>
+	<select id="selectByUserId" resultType="com.pinhaha.pojo.AppUserCoupon">
+		select * from app_user_coupon where user_id=#{userId} 
+	</select>
+</mapper>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>用户管理-总后台</title>
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}" media="all" />
+    <script type="text/javascript" th:src="@{{path}/js/jquery-1.8.3.min.js(path=${contextPath})}"></script>
+	<script type="text/javascript" th:src="@{../layui/layui.js}"></script>
+	<script type="text/javascript" th:src="@{{path}/page/user/userlist.js(path=${contextPath})}"></script> 
+
+  </head>
+  
+  <style>
+  	input{
+  		height:30px;
+  	}
+  	select{
+  		height:30px;
+  	}
+  	.search-btn{
+  		width:150px;
+  		height:40px;
+  		color:white;
+  		background: #169BD5;
+  		line-height: 40px;
+  		text-align: center; 	
+  		border-radius: 3px;
+  		margin-top:30px;
+  		margin-left:50px;
+  		cursor: pointer;
+  	}
+  	.userblock{
+  		margin-top:10px;
+  	}
+  	.line-time{
+  		margin-left:50px;
+  		margin-top:30px;
+  		font-size: 15px;
+  	}
+  	.same-line{
+  		margin-left:30px;
+  	}
+  	#date1,#date2{
+  		margin-left:20px; 
+  	}
+  	
+  </style>
+  
+  <body>
+    <blockquote class="layui-elem-quote layui-bg-green userblock" >
+		<div id="s1">用户管理&gt;普通用户</div>
+	</blockquote>
+	<div class="layui-form">
+	<blockquote class="layui-elem-quote layui-text" style="margin-top:30px;">
+	<div class="layui-form-item layui-col-md-offset1" >
+		<div class="layui-inline" style="width:100px;" >
+				<select id="timetype">
+					<option value="1">注册时间</option>
+					<option value="2">到期时间</option>
+				</select>
+		</div>
+		<div class="layui-inline" style="width:100px;">
+			<input type="text" class="layui-input" id="date1"  readonly="readonly" placeholder="yyyy-MM-dd" >
+		</div>
+		
+		<div class="layui-inline" style="width:100px;">
+			<input type="text" class="layui-input" id="date2"  readonly="readonly" placeholder="yyyy-MM-dd" >
+		</div>
+	</div>
+	<div class="layui-form-item layui-col-md-offset1" >
+		
+		<div class="layui-inline">
+				<span>用户名：</span>
+		</div>
+		<div class="layui-inline">
+				<input type="text" class="layui-input" id="user_name">
+		</div>
+		<div class="layui-inline">
+				<span>手机号：</span>
+		</div>
+		<div class="layui-inline">
+				<input type="text" class="layui-input" id="phone" >
+		</div>
+			
+	</div>
+	
+	
+	
+		<!--	<span class="same-line">所属地区：</span>
+			<select id="com" onchange="CompanyChange()">
+				<option value="0">请选择</option>
+			</select>
+			<select id="dept">
+				<option value="0">请选择</option>
+			</select>-->
+	<div class="layui-form-item layui-col-md-offset1" >
+		<div class="layui-inline">
+			<span>会员等级：</span>
+		</div>
+		<div class="layui-inline" style="width:100px;">
+			<select id="levelOp" >
+				<option value="0">请选择</option>
+			</select>
+		</div>
+		<div class="search-btn">
+			<span>搜索</span>
+		</div>
+	</div>
+	</blockquote>	
+	
+	
+	<div>
+		<table id="userList" lay-filter="userList"></table>
+	</div>
+	
+	
+	</div><!-- form -->
+	
+	<script type="text/html" id="userlistBar">
+		
+		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+	</script>
+	<!-- <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a> -->
+	
+	<script>
+
+        	
+/*        	function CompanyChange(){
+       		$("#dept").html("<option value='0'>请选择</option>")
+       		var comid=$("#com option:selected").val()
+        		$.ajax({
+		            type:"GET",
+		            url:"/user/api/comsdept",
+		            data:{comid:comid},
+		         	datatype: "json",
+		      		async:false,
+		            success:function(data){
+						for(var i=0;i<data.length;i++){
+							$("#dept").append("<option value="+data[i].dept_id+">"
+							+data[i].dept_name+"</option>")
+						}
+		            }
+        		}); 
+       	}
+       	
+       	$.ajax({
+            type:"GET",
+            url:"/user/api/company",
+         	datatype: "json",
+      		async:false,
+            success:function(data){
+				for(var i=0;i<data.length;i++){
+					$("#com").append("<option value="+data[i].company_id+">"
+					+data[i].company_name+"</option>")
+				}
+            }
+        }); */
+    
+    getlevel()  
+      
+	function getlevel(){
+        $.ajax({
+            type:"GET",
+            url:"/userapi/getlevel",
+         	datatype: "json",
+      		async:false,
+            success:function(data){
+            	$("#levelOp").append("<option value='-1'>普通用户</option>")
+				for(var i=0;i<data.length;i++){
+					$("#levelOp").append("<option value='"+data[i].id+"'>"
+					+data[i].member_name+"</option>")
+				}
+            }
+        });  
+	}
+	         		 	
+	         	
+	</script>
+	
+  </body>
+</html>
