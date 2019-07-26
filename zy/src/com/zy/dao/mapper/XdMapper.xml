@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.XdMapper">
+
+<select id="xdsearchAll" resultType="com.zy.bean.XdBean">
+ select count(*)as danshu, sum(dazhemoney)as discount, sum(eatnum)as personcount,sum(realpay)as realcount
+ from list  where state=1 
+</select>
+
+<select id="xdsearchA" resultType="XdBean">
+ select count(*)as danshu, sum(dazhemoney)as discount, sum(eatnum)as personcount,sum(realpay)as realcount
+ from list  where state=1 and paytime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and 
+ to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')
+</select>
+ 
+</mapper>

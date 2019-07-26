@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.OutCangkuMapper">
+	<!-- 查找所有(分页) -->
+	<select id="findAllByPage" resultType="OutCangku">
+	select * from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c)
+	where r between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	
+	<!-- 判断编码是否存在 -->
+	<select id="findById" parameterType="String" resultType="OutCangku">
+		select * from outcangku where id=#{value}
+	</select>
+	
+	
+	
+	<!-- 判断编码是否存在 -->
+	<select id="findById1" parameterType="String" resultType="OutCangku">
+		select * from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c)
+	where id=#{value}
+	</select>
+	
+	<!-- 搜索全部员工 -->
+	<select id="findAllEmp" resultType="Emp">
+		select * from emp where powerid=3
+	</select>
+	
+	<!--  搜索全部仓库 -->
+	<select id="findAllCangku" resultType="Cangku">
+		select * from cangku where id in(select cangkuid from cangkucun)
+	</select>
+	
+	<!-- 搜索相应仓库内材料 -->
+	<select id="findcailiao" resultType="Cailiao">
+	select * from
+      (select rownum as r,mm.* from
+      (select m.num,m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from (select * from materials na join (select materialsid,num from cangkucun where cangkuid=#{ckid})ne on na.id=ne.materialsid ) m 
+      order by mtypeid)mm where num>0)where r between (#{page}-1)*20+1 and #{page}*20
+	</select>
+	
+	<!-- 按要求搜索材料 -->
+	<select id="findByType" resultType="Cailiao" parameterType="CangkucunSearch">
+	  select * from
+      (select rownum as r,mm.* from
+      (select m.num,m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from (select * from materials na join (select materialsid,num from cangkucun where cangkuid=#{ckid})ne on na.id=ne.materialsid ) m 
+      order by mtypeid)mm where ${type} like '%${text}%' and num>0)where r between (#{page}-1)*20+1 and #{page}*20
+	</select>
+	
+	<!-- 新增一条材料明细信息 -->
+	<insert id="addNewCl" parameterType="OutCailiao">
+		insert into outllist values(seq_outllist.nextval,#{materialsid},#{num},#{outcangkuid})
+	</insert>
+	
+	<!-- 删除一条材料明细信息 -->
+	<delete id="deleteNewCl" parameterType="int">
+		delete from outllist where id=#{value}
+	</delete>
+	
+	<!-- 根据流水号查找对应明细信息 -->
+	<select id="findByCkid" parameterType="String" resultType="OutCailiao">
+	select id,materialsid,(select name from materials where id=ot.materialsid) as mname
+  	,(select name from materialstype where id=(select m1.materialstypeid from materials m1 where m1.id=ot.materialsid)) as mtype
+  	,num,outcangkuid from outllist ot where outcangkuid=#{value}
+	</select>
+	
+	<!-- 更新仓库存 -->
+	<update id="updateCangkucun" parameterType="Cangkucun">
+		update cangkucun set num=num-#{num} where cangkuid=#{cangkuid} and materialsid=#{materialsid}
+	</update>
+	
+	<!-- 新增一条材料明细信息 -->
+	<insert id="addNewCk" parameterType="OutCangku">
+		insert into outcangku values(#{id},#{cangkuid},to_date(#{outtime},'yyyy-mm-dd hh24:mi:ss'),#{doman},#{info})
+	</insert>
+	
+	<!-- 根据流水号删除材料明细信息 -->
+	<delete id="deleteByCkid" parameterType="String">
+		delete from outllist where outcangkuid=#{value}
+	</delete>
+	
+	
+	
+	<!-- 查找所有(分页) -->
+	<select id="selectAll" resultType="OutCangku">
+	select * from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c
+	where outtime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss') 
+	and ${type} like '%${text}%')
+	where r between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	
+	<!-- 查找所有(分页) -->
+	<select id="selectTime" resultType="OutCangku">
+	select * from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c
+	where outtime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss'))
+	where r between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	
+	<!-- 查找所有(分页) -->
+	<select id="selectType" resultType="OutCangku">
+	select * from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c
+	where ${type} like '%${text}%')
+	where r between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	
+	
+	<!-- 查找所有(分页) -->
+	<select id="findAllOC" resultType="int">
+	select count(*) from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c)
+	</select>
+	
+	<!-- 查找所有(分页) -->
+	<select id="selectAllOC" resultType="int">
+	select count(*) from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c
+	where outtime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss') 
+	and ${type} like '%${text}%')
+	</select>
+	
+	<!-- 查找所有(分页) -->
+	<select id="selectTimeOC" resultType="int">
+	select count(*) from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c
+	where outtime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss'))
+	
+	</select>
+	
+	<!-- 查找所有(分页) -->
+	<select id="selectTypOC" resultType="int">
+	select count(*) from(select rownum as r,c.* from(
+	select id,cangkuid,(select ck.name from cangku ck where ck.id=ock.cangkuid) as ckname
+	,outtime,doman,(select e.name from emp e where e.id=ock.doman) as doname,info from outcangku ock)c
+	where ${type} like '%${text}%')
+	</select>
+	
+	
+	
+	
+	<!-- 搜索相应仓库内材料 -->
+	<select id="findCL" resultType="int">
+	select count(*) from
+      (select rownum as r,mm.* from
+      (select m.num,m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from (select * from materials na join (select materialsid,num from cangkucun where cangkuid=#{ckid})ne on na.id=ne.materialsid ) m 
+      order by mtypeid)mm where num>0)
+	</select>
+	
+	<!-- 按要求搜索材料 -->
+	<select id="findCLT" resultType="int" parameterType="CangkucunSearch">
+	  select count(*) from
+      (select rownum as r,mm.* from
+      (select m.num,m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from (select * from materials na join (select materialsid,num from cangkucun where cangkuid=#{ckid})ne on na.id=ne.materialsid ) m 
+      order by mtypeid)mm where ${type} like '%${text}%' and num>0)
+	</select>
+	
+	
+	<select id="searchKkucun" resultType="int">
+		select count(*) from kitchenkucun where materialsid=#{value}
+	</select>
+	
+	<update id="updateKkucun">
+		update kitchenkucun set num=num+#{num} where materialsid=#{mid}
+	</update>
+	
+	<insert id="addKkucun">
+		insert into kitchenkucun values(seq_kitchenkucun.nextval,#{mid},#{num})
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

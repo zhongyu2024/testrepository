@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.YudingMapper">
+	<select id="findByTime"  resultType="YudingFoodtable">
+		select * from foodtable where seatsize=2 and id in(select tableid from yuding where yutime between to_date(#{beginTime},'MM-dd HH24:MI') and to_date(#{endTime},'MM-dd HH24:MI')) 
+	</select>
+	<select id="findId"  resultType="int">
+		select seq_yuding.nextval from dual
+	</select>
+	<select id="findNum" resultType="int">
+		select count(*) from yuding
+	</select>	
+	<update id="updateYuding" parameterType="Yuding">
+		update yuding set state=#{state} where id=#{id}
+	</update>
+	<select id="findGuoqi" resultType="String">
+		select yutime from yuding
+	</select>
+	<!-- 新增预订 -->
+	<insert id="insert" parameterType="yuding">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_yuding.nextval from dual
+		</selectKey>
+		insert into yuding values(#{id},#{name},#{sex},#{tel},#{mannum},to_date(#{yutime},'MM-dd HH24:MI'),#{baotime},#{info},#{money},#{tableid},0,sysdate,#{opentimeid})
+	</insert>
+	
+ 	<select id="findByName" parameterType="String" resultType="Yuding">
+		select * from (select n.*,rownum rn from (select * from yuding where name like '%${info}%' ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+	</select>
+	<select id="findByTel" parameterType="String" resultType="Yuding">
+		select * from (select n.*,rownum rn from (select * from yuding where tel like '%${info}%' ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+	</select>
+	<!-- 新增预订查询桌位 -->
+	<select id="findQuery" parameterType="YudingQuery" resultType="YudingFoodtable">
+		select * from foodtable where
+			<if test="seatsize.equals('eight')"> 
+			seatsize>=8 and id not in (select tableid from yuding where opentimeid=#{opentimeid} and to_char(yutime,'MM-dd')=#{yutime} and state=0)
+			</if>
+			<if test="seatsize.equals('all')">
+			id not in (select tableid from yuding where opentimeid=#{opentimeid} and to_char(yutime,'MM-dd')=#{yutime} and state=0)
+			</if>
+			<if test="seatsize.equals('two')"> 
+			seatsize=2 and id not in (select tableid from yuding where opentimeid=#{opentimeid} and to_char(yutime,'MM-dd')=#{yutime} and state=0)
+			</if>
+			<if test="seatsize.equals('four')"> 
+			seatsize=4 and id not in (select tableid from yuding where opentimeid=#{opentimeid} and to_char(yutime,'MM-dd')=#{yutime} and state=0)
+			</if>
+			<if test="seatsize.equals('six')"> 
+			seatsize=6 and id not in (select tableid from yuding where opentimeid=#{opentimeid} and to_char(yutime,'MM-dd')=#{yutime} and state=0)
+			</if>
+	</select>
+	<!-- 预订列表查询桌位 -->
+ 	<select id="findByQuery" parameterType="YudingQuery" resultType="Yuding">
+		select * from (select n.*,rownum rn from (select * from yuding
+			<if test="yutime.equals('time') and state==4 and createtime==0">
+				order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('time') and state==4 and createtime==1">
+				order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+		<where>
+			<!-- 所有今天 -->
+			<if test="yutime.equals('today') and state!=4 and createtime==1">
+				and state=#{state} and to_char(yutime,'MM-dd') =to_char(sysdate,'MM-dd') order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('today') and state!=4 and createtime==0">
+				and state=#{state} and to_char(yutime,'MM-dd') =to_char(sysdate,'MM-dd') order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('today') and state==4 and createtime==1">
+				and to_char(yutime,'MM-dd') =to_char(sysdate,'MM-dd') order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('today') and state==4 and createtime==0">
+				and to_char(yutime,'MM-dd') =to_char(sysdate,'MM-dd') order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<!-- 所有明天 -->
+			<if test="yutime.equals('tomorrow') and state!=4  and createtime==1">
+				and state=#{state} and to_char(yutime,'MM-dd') =to_char(sysdate+1,'MM-dd') order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('tomorrow') and state!=4  and createtime==0">
+				and state=#{state} and to_char(yutime,'MM-dd') =to_char(sysdate+1,'MM-dd') order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('tomorrow') and state==4  and createtime==1">
+				and to_char(yutime,'MM-dd') =to_char(sysdate+1,'MM-dd') order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('tomorrow') and state==4  and createtime==0">
+				and to_char(yutime,'MM-dd') =to_char(sysdate+1,'MM-dd') order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<!-- 所有后天 -->
+			<if test="yutime.equals('houtian') and state!=4 and createtime==1">
+				and state=#{state} and to_char(yutime,'MM-dd') =to_char(sysdate+2,'MM-dd') order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('houtian') and state!=4 and createtime==0">
+				and state=#{state} and to_char(yutime,'MM-dd') =to_char(sysdate+2,'MM-dd') order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('houtian') and state==4 and createtime==1">
+				and to_char(yutime,'MM-dd') =to_char(sysdate+2,'MM-dd') order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('houtian') and state==4 and createtime==0">
+				and to_char(yutime,'MM-dd') =to_char(sysdate+2,'MM-dd') order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<!-- 所有预定时间 --> 
+			<if test="yutime.equals('time') and state!=4 and createtime==0">
+				and state=#{state} order by yutime asc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+			<if test="yutime.equals('time') and state!=4 and createtime==1">
+				and state=#{state} order by createtime desc ) n) where rn between (#{pageno}-1)*14+1 and #{pageno}*14
+			</if>
+		</where>
+	</select>
+</mapper>

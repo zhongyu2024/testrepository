@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.specialMapple">
+	<select id="findAll" resultType="Mode">
+		select * from yaoqiu
+	</select>
+	
+	<select id="findName" parameterType="String" resultType="Mode">
+		select * from yaoqiu where name=#{name}
+	</select>
+	
+	<insert id="addSpecial" >
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_yaoqiu.nextval from dual
+		</selectKey>
+		insert into yaoqiu values(#{id},#{name})
+	</insert>  
+	
+	<update id="editSpecial">
+		update yaoqiu set name=#{name} where id=#{id}
+	</update>
+	
+	<delete id="deleteSpecial" parameterType="int">
+		delete from yaoqiu where id=#{id}
+	</delete>
+</mapper>

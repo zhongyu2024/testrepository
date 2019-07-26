@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.YingyeMapper">
+    
+    <select id="getAll" resultType="com.zy.bean.Cooktype">
+    	select * from cooktype 
+    </select>
+    <!--菜品分析      菜品名称  菜品类别  点单数量    实际金额-->
+    <select id="findByCaipin" resultType="com.zy.bean.Caipinfenxi">
+   		select n.cainame,n.num,n.money,(select name from cooktype where id=(select cooktypeid from food ct where ct.name=n.cainame)) caitype from listinfo n 
+    	<where>
+    		<if test="test11!=null and test12!=null">
+    			and  listid in (select id from list where ordertime &gt;= to_date(#{test11},'yyyy-mm-dd hh24:mi:ss') and ordertime &lt;= to_date(#{test12},'yyyy-mm-dd hh24:mi:ss')) 
+    		</if>
+    		<if test="s3b1Sel!=0">
+    			and cainame in (select name from food where cooktypeid=#{s3b1Sel})
+    		</if>
+    	</where>
+     
+    </select>
+   <!--  <resultMap type="ZList" id="zhifumingxi">
+    	<result property="id" column="id"/>
+    	<result property="realpay" column="realpay"/>
+    	<result property="paytime" column="paytime"/>
+    </resultMap> -->
+    <!-- 支付明细    订单号   支付金额   结账日期 -->
+    <select id="findPayDetail" resultType="com.zy.bean.ZList">
+       select * from list
+      <where>
+	      <if test="test17!=null and test18!=null">
+	        and  paytime &gt;= to_date(#{test17},'yyyy-mm-dd hh24:mi:ss') and paytime &lt;= to_date(#{test18},'yyyy-mm-dd hh24:mi:ss')
+	       </if>
+	      <if test="txts3b2!=null">
+			and id=#{txts3b2}
+	      </if>
+      </where>
+    </select>
+    <resultMap type="ZList" id="cantaitongji">
+    	<result property="tableid" column="tableid"/>
+    	<result property="eatnum" column="eatnum"/>
+    	<result property="paymoney" column="paymoney"/>
+    </resultMap>
+    <!-- 餐台统计区   餐台名称	消费人数	消费金额	 -->
+    <select id="findTableDet" resultMap="cantaitongji">
+       select tableid,eatnum,paymoney from list 
+       <where>
+       <if test="test19!=null and test20!=null">
+         and ordertime &gt;= to_date(#{test19},'yyyy-mm-dd hh24:mi:ss') and ordertime &lt;= to_date(#{test20},'yyyy-mm-dd hh24:mi:ss')
+       </if>      
+       <if test="s3b3Sel!=0">
+       	and tableid=#{s3b3Sel}
+       </if>
+       </where>
+    </select>
+</mapper>

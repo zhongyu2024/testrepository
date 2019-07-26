@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.BaobiaoMapper">
+	<!-- 查询营业收入 -->
+	<select id="findTotal" resultType="int">
+		select sum(realpay) from list where paytime between to_date(#{beginTime},'yyyy-MM-dd HH24:MI:ss') and to_date(#{endTime},'yyyy-MM-dd HH24:MI:ss')
+	</select>
+	<!-- 查询总单数 -->
+	<select id="findSum" resultType="int">
+		select count(*) from list where paytime between to_date(#{beginTime},'yyyy-MM-dd HH24:MI:ss') and to_date(#{endTime},'yyyy-MM-dd HH24:MI:ss')
+	</select>
+	<!-- 查询总用餐人数 -->
+	<select id="findHum" resultType="int">
+		select sum(eatnum) from list where paytime between to_date(#{beginTime},'yyyy-MM-dd HH24:MI:ss') and to_date(#{endTime},'yyyy-MM-dd HH24:MI:ss')
+	</select>
+	<!-- 查询销售的菜类名总额 -->
+	<select id="findCaiMoney" resultType="int">
+		select sum(money) from listinfo where cainame in (select name from food where cooktypeid=(select id from cooktype where name=#{cooktypename} and listid in(select id from list where paytime between to_date(#{beginTime},'yyyy-MM-dd HH24:MI:ss') and to_date(#{endTime},'yyyy-MM-dd HH24:MI:ss'))))
+	</select>
+	<select id="findCaiMoneyId" resultType="Listinfo">
+		select * from listinfo where cainame in (select name from food where cooktypeid=(select id from cooktype where name=#{cooktypename} and listid in(select id from list where paytime between to_date(#{beginTime},'yyyy-MM-dd HH24:MI:ss') and to_date(#{endTime},'yyyy-MM-dd HH24:MI:ss'))))
+	</select>
+	
+	<select id="findCaiType" resultType="Cooktype">
+		select * from cooktype where id in(select cooktypeid from food where name in (select cainame from listinfo where listid in (select id from list where paytime between to_date(#{beginTime},'yyyy-MM-dd HH24:MI:ss') and to_date(#{endTime},'yyyy-MM-dd HH24:MI:ss'))))
+	</select>
+	<!-- 查询会员充值总额 -->
+	<select id="findSumMoney" resultType="int">
+ 		select sum(money) from viprecord where time between to_date(#{beginTime},'yyyy-MM-dd HH24:MI:ss') and to_date(#{endTime},'yyyy-MM-dd HH24:MI:ss')
+ 	</select>
+</mapper>

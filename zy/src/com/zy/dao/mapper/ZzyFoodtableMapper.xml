@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.ZzyFoodtableMapper">
+	<select id="findAllTables" resultType="Foodtable">
+		select * from foodtable
+	</select>
+	<!-- 动态查询 -->
+	<select id="findByQUery" parameterType="FoodtableQuery" resultType="Foodtable" >
+		select * from foodtable
+		<where>
+			<if test="seatsize!=0 and state==3 and area==2 and seatsize!=8">
+				and seatsize=#{seatsize}
+			</if>
+			<if test="state==3 and area==2 and seatsize==8">
+				and seatsize <![CDATA[ >= ]]> 8
+			</if>
+			<if test="seatsize==0 and state!=3 and area==2">
+				and state=#{state}
+			</if>
+			<if test="seatsize==0 and state==3 and area!=2">
+				and area=#{area}
+			</if>
+			
+			
+			<if test="seatsize!=0 and state!=3 and area==2 and seatsize!=8">
+				and seatsize=#{seatsize} and state=#{state}
+			</if>
+			<if test="seatsize==8 and state!=3 and area==2 ">
+				and seatsize &gt;= #{seatsize} and state=#{state}
+			</if>
+			<if test="seatsize!=0 and state==3 and area!=2 and seatsize!=8">
+				and seatsize=#{seatsize} and area=#{area}
+			</if> 
+			<if test="seatsize==8 and state==3 and area!=2">
+				and seatsize &gt;= #{seatsize} and area=#{area}
+			</if> 
+			<if test="seatsize==0 and state!=3 and area!=2">
+				and state=#{state} and area=#{area}
+			</if>  
+			<if test="seatsize!=0 and state!=3 and area!=2 and seatsize!=8">
+				and state=#{state} and area=#{area} and seatsize=#{seatsize}
+			</if> 
+			<if test="seatsize!=0 and state!=3 and area!=2 and seatsize==8">
+				and state=#{state} and area=#{area} and seatsize&gt;= #{seatsize}
+			</if> 
+		</where>		
+	</select>
+	<!-- <resultMap type="com.zy.bean.Foodtable" id="FoodtableZListResultMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="zlist" javaType="com.zy.bean.ZList" autoMapping="true"></association>
+		<association property="yuding" javaType="com.zy.bean.Yuding" autoMapping="true"></association>
+	</resultMap>
+	<select id="findFZY">
+		
+	</select> -->
+	<select id="findZListByFT" parameterType="int" resultType="ZList">
+		select * from list where tableid=#{value} and state=0 and type=0
+	</select>
+  	<select id="findYudingByFT" parameterType="int" resultType="Yuding">
+		select * from (select * from yuding where tableid=#{value} and state=0 order by yutime) where rownum=1
+	</select>  
+	<select id="findNowTime" resultType="Opentime">
+		select * from opentime where to_date(to_char(sysdate,'yyyy-mm-dd')||starttime,'yyyy-mm-dd hh24:mi:ss') &lt; sysdate and to_date(to_char(sysdate,'yyyy-mm-dd')||endtime,'yyyy-mm-dd hh24:mi:ss') &gt; sysdate
+	</select>
+	<update id="updateFoodtableState">
+		update foodtable set state=#{state} where id=#{tableid}
+	</update>
+	<select id="findFTByid" parameterType="int" resultType="Foodtable">
+		select * from Foodtable where id=#{value}
+	</select>
+	<select id="findListinfo" parameterType="String" resultType="Listinfo">
+		select * from Listinfo where listid=#{value}
+	</select>
+	<select id="findAllFuWu" resultType="Emp">
+		select * from emp where powerid=3
+	</select>
+	<insert id="addKaiTai">
+		insert into list values(#{id},sysdate,0,0,#{tableid},default,#{eatnum},0,0,#{waiterid},#{cashierid},null,null,null,null,null)
+	</insert>
+	<update id="qingtai" parameterType="String">
+		update list set state=2 where id=#{value}
+	</update>
+	<select id="canhetaitable" resultType="Foodtable">
+		select * from foodtable 
+		<where>
+			<if test="seatsize==0 and area!=2">
+				 and area = #{area} and hetai=0 and state=1  
+			</if>
+			<if test="seatsize!=0 and area==2 and seatsize!=8">
+				and seatsize=#{seatsize} and hetai=0 and state=1  
+			</if>
+			<if test="seatsize==8 and area==2">
+				and seatsize &gt;= #{seatsize} and hetai=0 is null and state=1
+			</if>
+			<if test="seatsize!=0 and area!=2 and seatsize!=8">
+				and area = #{area} and seatsize = #{seatsize}  and hetai=0 and state=1  
+			</if>
+			<if test="seatsize==8 and area!=2">
+				and area=#{area} and seatsize&gt;=#{seatsize} and hetai=0 and state=1 
+			</if>
+			<if test="seatsize==0 and area==2">
+				and hetai=0 and state=1  
+			</if>
+		</where>
+	</select>
+	<insert id="addhetai">
+		insert into hetable values(#{fulistid},#{zilistid},0)
+	</insert>
+	<update id="updatefoodtablehetai">
+		update foodtable set hetai=#{hetaistate} where id=#{tableid} 
+	</update>
+	<select id="findzilistidByfu" parameterType="String" resultType="Hetable">
+		select * from hetable where aid=#{value} and state=0
+	</select>
+	<select id="findZListByid" parameterType="String" resultType="ZList">
+		select * from list where id=#{value}
+	</select>
+	<update id="gukedaodian" parameterType="int">
+		update yuding set state=2 where id=#{value}
+	</update>
+	<delete id="deletehetable" parameterType="String">
+
+		delete  from hetable where aid=#{value} and state=0
+
+
+	</delete>
+	<select id="findhetableByBid" parameterType="String" resultType="Hetable">
+		select * from hetable  where bid=#{value} and state=0
+	</select>
+	<select id="findFTBylistid" parameterType="String" resultType="ZList">
+		select * from list where id=#{value}
+	</select>
+</mapper>

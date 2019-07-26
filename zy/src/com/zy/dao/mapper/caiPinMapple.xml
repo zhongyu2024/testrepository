@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.caiPinMapple">
+<!-- 使用resultMap查询 所有主贴，并且携带用户的所有信息,先定义一个resultMap-->
+	<!-- 定义一个resultMap:将查询的结果组装成某个对象，映射成成员属性，最后返回Topic 
+		type:返回的数据类型
+	-->
+	<resultMap type="com.zy.bean.Caipin" id="caipinResultMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="mode" javaType="com.zy.bean.Mode" autoMapping="false">
+			<id property="id" column="cid"/>
+			<id property="name" column="cname"/>
+		</association>
+	</resultMap>
+	<select id="findAllFood" resultMap="caipinResultMap">
+		select f.*,c.id as cid,c.name as cname from food f join Cooktype c on f.cooktypeid=c.id
+	</select>
+	<!-- 增加 
+		如果使用序列自动生成，插入数据时，想同时获取当次的主键的值
+	-->
+	  <select id="searchthis" parameterType="String" resultType="int" >
+		select id from cooktype where name=#{name}
+	  </select>
+	
+	<insert id="addFood" >
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_food.nextval from dual
+		</selectKey>
+		insert into food values(#{id},#{name},#{typeid},#{price},0)
+	</insert>  
+	
+	<select id="searchCai" parameterType="String" resultType="Caipin" >
+		select * from food where name=#{name}
+	</select>
+	
+	<delete id="deleteFood" parameterType="int"> 
+		delete from food where id=#{id}
+	</delete>
+	
+	
+	<update id="editFood">
+		update food set name=#{name1},price=#{price} where name=#{name}
+	</update>
+	
+	<!--菜系  -->
+	<select id="findAllCookType" resultType="Mode">
+		select * from cooktype
+	</select>
+	
+	<select id="searchFoodByName" parameterType="int" resultType="int">
+		select count(*) from food where cooktypeid=#{typeid}
+	</select>
+	
+	
+	<!-- 查找该名字type的 -->
+	<select id="searchType" parameterType="String" resultType="Mode">
+		select * from cooktype where name =#{name}
+	</select>
+	
+	
+	<resultMap type="com.zy.bean.Caipin" id="showResultMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="mode" javaType="com.zy.bean.Mode" autoMapping="false">
+			<id property="id" column="cid"/>
+			<id property="name" column="cname"/>
+		</association>
+	</resultMap>
+	<select id="showOthers" resultMap="showResultMap">
+		select f.*,c.id as cid,c.name as cname from food f join Cooktype c on f.cooktypeid=c.id where c.name =#{name}
+	</select>
+	
+	<!-- 增加 
+		如果使用序列自动生成，插入数据时，想同时获取当次的主键的值
+	-->
+	<insert id="addCookType" parameterType="com.zy.bean.Mode">
+		<!-- keyProperty:存放查询出的主键的属性名称 -->
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_cooktype.nextval from dual
+		</selectKey>
+		insert into cooktype values(#{id},#{name})
+	</insert>
+	
+	<delete id="deleteCookType" parameterType="String">
+		delete from cooktype where name=#{name}
+	</delete>
+	<delete id="deleteAllFood">
+		delete from food where cooktypeid=#{typeid}	
+	</delete>
+	
+	<update id="editCookType">
+		update cooktype set name=#{name1} where name=#{name}
+	</update>
+	
+</mapper>

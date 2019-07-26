@@ -1,0 +1,123 @@
+@CHARSET "UTF-8";
+body{
+	font-family:微软雅黑;
+	width:99%;
+}
+.nav{
+	background:#EFF3F6;
+	height:35px;
+	width:100%;
+	display:inline-block;
+	font-size:15px;
+	border-bottom:1px solid #DADADA;
+}
+#xinzeng{
+	border-top:2px solid #00B96D;
+	border-left:1px solid #DADADA;
+	border-right:1px solid #DADADA;
+	float:left;
+	margin-left:10px;
+	width:95px;
+	height:23px;
+	text-align:center;
+	padding-top:5px;
+	padding-bottom:5px;
+	background:white;
+	cursor:pointer;
+}
+#liebiao{
+	float:left;
+	cursor:pointer;
+	text-align:center;
+	border-top:1px solid #DADADA;
+	border-left:1px solid #DADADA;
+	border-right:1px solid #DADADA;
+	height:24px;
+	width:95px;
+	padding-top:5px;
+	padding-bottom:5px;
+}
+.left{
+	float:left;
+	width:75%;
+}
+.right{
+	float:right;
+	background:#EFF3F6;
+	height:600px;
+	width:25%;
+	font-size:16px;
+}
+.left-date{
+	height:20px;
+	padding-top:15px;
+	padding-bottom:15px;
+	font-size:15px;
+	border-bottom:1px solid #DADADA;
+}
+.left-date span{
+	width:65px;
+	height:25px;
+	padding-top:5px;
+ 	padding-left:5px;
+	padding-right:5px;
+	padding-bottom:5px;
+	margin-left:5px;
+	cursor:pointer;
+}
+.left-time{
+	width:10%;
+	float:left;
+	height:548px;
+	font-size:15px;
+	border-bottom:1px solid #DADADA;
+	border-right:1px solid #DADADA;
+}
+.left-list{
+	float:left;
+	width:89%;
+	height:549px;
+ 	border-bottom:1px solid #DADADA;
+ }
+.left-time p{
+	width:35px;
+	height:15px;
+	margin-left:10px;
+	padding-left:25px;
+	padding-right:25px;
+	padding-top:10px;
+	padding-bottom:10px;
+	cursor:pointer;
+}
+.left-seatnum{
+	border-bottom:1px solid #DADADA;
+	width:120%;
+	height:30px;
+	font-size:15px;
+	padding-top:10px;
+	padding-bottom:15px;
+	float:left;
+	display:inline-block;
+}
+#all,#two,#four,#six{
+	width:45px;
+	height:15px;
+	margin-left:10px;
+	padding-left:25px;
+	padding-right:25px;
+	padding-top:10px;
+	padding-bottom:10px;
+	cursor:pointer;
+	float:left;
+}
+.hidstyle{
+	border:1px solid #DADADA;
+	text-align:center;
+	width:60px;
+	height:25px;
+	background:#EFF3F6;
+	float:left;
+	margin-left:10px;
+	margin-top:5px;
+	margin-bottom:5px;
+}

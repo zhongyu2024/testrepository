@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.yuanGongMapple">
+	<!-- 员工 -->
+	 <resultMap type="com.zy.bean.Yuangong" id="yuangongResultMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="mode" javaType="com.zy.bean.Mode">
+			<id property="id" column="pid"/>
+			<id property="name" column="pname"/>
+		</association>
+	</resultMap>
+	<select id="findAll" resultMap="yuangongResultMap">
+		select e.*,p.id as pid,p.name as pname from emp e join power p on e.powerid=p.id
+	</select> 
+	
+	
+	<!-- 分职级查询员工 -->
+	<resultMap type="com.zy.bean.Yuangong" id="OthersResultMap" autoMapping="true">
+		<id property="id" column="id"/>
+		<association property="mode" javaType="com.zy.bean.Mode">
+			<id property="id" column="pid"/>
+			<id property="name" column="pname"/>
+		</association>
+	</resultMap>
+	<select id="findOthers" resultMap="OthersResultMap">
+		select e.*,p.id as pid,p.name as pname from emp e join power p on e.powerid=p.id where p.name=#{name}
+	</select> 
+	
+	<insert id="addEmp" parameterType="com.zy.bean.Yuangong">
+		<!-- keyProperty:存放查询出的主键的属性名称 -->
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_emp.nextval from dual
+		</selectKey>
+		insert into emp values(#{id},#{name},#{username},#{userpass},#{powerid},#{sex},to_date(#{birthday},'yyyy-mm-dd'),sysdate,#{tel})
+	</insert>
+
+	<update id="editEmp" parameterType="Yuangong">
+		update emp set name=#{name},username=#{username},userpass=#{userpass},powerid=#{powerid},sex=#{sex},birthday=to_date(#{birthday},'yyyy-mm-ss'),tel=#{tel} where id=#{id}
+	</update>
+		
+	<delete id="deleteEmp" parameterType="int">
+		delete from emp where id=#{id}
+	</delete>
+	
+	
+	
+	
+	<!-- 职级 -->
+	 <select id="findAllPower" resultType="Mode">
+		select * from power 
+	</select> 
+	<select id="searchIdByName" parameterType="String" resultType="int">
+		select id from power where name=#{name}
+	</select>
+	<select id="findPowerById" parameterType="int" resultType="String">
+		select name from power where id=#{id}
+	</select>
+	<!-- 增加 
+		如果使用序列自动生成，插入数据时，想同时获取当次的主键的值
+	-->
+	 <insert id="addPower" parameterType="com.zy.bean.Mode">
+		<!-- keyProperty:存放查询出的主键的属性名称 -->
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_power.nextval from dual
+		</selectKey>
+		insert into power values(#{id},#{name})
+	</insert>
+	
+	<select id="searchPower" parameterType="String" resultType="Mode">
+		select * from power where name=#{name}
+	</select>
+	
+	
+	<!-- 删除职级并且删除该职级下的员工 -->
+	<delete id="deletePower" parameterType="String">
+		delete from power where name=#{name}
+	</delete>
+	<!-- 删除该职级下的员工 -->
+	<delete id="deleteEmpByPower" parameterType="int">
+		delete from emp where powerid=#{id}
+	</delete>
+	<update id="editPower">
+		update power set name=#{name1} where name=#{name}
+	</update> 
+</mapper>

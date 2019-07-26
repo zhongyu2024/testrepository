@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.MimayzMapper">
+	<update id="changePass">
+		update emp set userpass=#{userpass} where id=#{id}
+	</update>
+	
+	<select id="huoquPass" parameterType="String" resultType="String">
+		Select userpass from emp where username=#{name}
+	</select>
+</mapper>

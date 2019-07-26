@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.ZGiverMapper">
+<!-- 所有厂商 -->
+   <select id="findAllgys" resultType="Giver"> 
+    select n.*from(select rownum as r,m.*from giver m)n where r between 18*(#{no}-1)+1 and #{no}*18
+   </select>
+   <select id="gongyschong" resultType="Giver"> 
+    select * from giver where name=#{name}
+   </select> 
+   <select id="findAllg" resultType="int"> 
+    select count(*)as count from giver m
+   </select>
+   
+   
+   <!-- ID条件查找所有厂商 -->
+    <select id="tiaojianGysInfoId" resultType="Giver"> 
+ select n.*from(select rownum as r,rm.* from giver rm where id like '%${idgy}%')n where r between 18*(#{no}-1)+1 and #{no}*18
+   </select>
+   
+   <select id="tiaojianGysInfoIdcount" resultType="int"> 
+   select count(*)from giver where id like '%${idgy}%'
+   </select>
+    <!--name条件查找 所有厂商 -->
+    <select id="tiaojianGysInfoNamecount" resultType="int"> 
+    select  count(*) from giver h where name like '%${namegys}%' 
+   </select>
+   <!--name条件查找 所有厂商 -->
+    <select id="tiaojianGysInfoName" resultType="Giver"> 
+   select n.*from(select rownum as r,h.*from giver h where name like '%${namegys}%')n where r between 18*(#{no}-1)+1 and #{no}*18
+   </select>
+    <!--添加厂商 -->
+    <insert id="addgys" parameterType="Giver"> 
+    insert into giver values(seq_giver.nextval,#{name},#{manname},#{mantel},#{address})
+   </insert>
+   <!-- 删除入库厂商 --> 
+   <delete id="delegysruku" parameterType="Giver"> 
+    delete from incangku where id=#{id}
+   </delete>
+   <!-- 删除厂商 --> 
+   <delete id="delegys" parameterType="Giver"> 
+    delete from giver where id=#{id}
+   </delete>
+   <!-- 更新厂商 --> 
+   <update id="xiugaigys" parameterType="Giver"> 
+     update giver set name=#{name},manname=#{manname},mantel=#{mantel},address=#{address} where id=#{id}
+   </update>
+</mapper>

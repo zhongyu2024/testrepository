@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.CangkuMapper">
+	<!-- 增加 -->
+	<insert id="addNew" parameterType="Cangku" >
+		insert into cangku values(seq_cangku.nextval,#{name},#{info})
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="updateById" parameterType="Cangku" >
+		update cangku set name=#{name},info=#{info} where id=#{id}
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteById" parameterType="int" >
+		delete from cangku where id=#{value}
+	</delete>
+	
+	<!-- 分页查找 -->
+	<select id="findByPage" resultType="Cangku">
+	select * from (select rownum as r,c.* from (select * from cangku order by id) c ) where r between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	
+	<!-- 查找所有 -->
+	<select id="findAll" resultType="int">
+	select count(*) from cangku
+	</select>
+	
+	
+	
+	<!-- 根据id查找 -->
+	<select id="findById" resultType="Cangku" parameterType="int">
+	select * from cangku where id=#{value}
+	</select>
+</mapper>

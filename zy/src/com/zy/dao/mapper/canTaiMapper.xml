@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.canTaiMapper">
+
+	<select id="findAll" resultType="Foodtable">
+		select * from foodtable
+	</select>
+	
+	<select id="findDaTing" resultType="Foodtable">
+		select * from foodtable where area=0
+	</select>
+	
+	<select id="findBaoXiang" resultType="Foodtable">
+		select * from foodtable where area=1
+	</select>
+	
+	<select id="findByName" resultType="int">
+		select count(*) from foodtable where name=#{name}
+ 	</select>
+	
+	<insert id="addCanTai" >
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_foodtable.nextval from dual
+		</selectKey>
+		insert into foodtable values(#{id},#{name},#{area},#{seatsize},#{minpay},0,0)
+	</insert>  
+	<update id="editCanTai"> 
+		update foodtable set name=#{name},area=#{area},seatsize=#{seatsize},minpay=#{minpay},state=0 where id=#{id}
+	</update>
+	
+	<delete id="deleteCanTai" parameterType="int">
+		delete from foodtable where id=#{id}
+	</delete>
+	
+</mapper>

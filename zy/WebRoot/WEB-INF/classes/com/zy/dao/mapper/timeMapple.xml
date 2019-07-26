@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.timeMapple">
+	<select id="findAll" resultType="Opentime">
+		select * from opentime
+	</select>
+	<select id="findthis" parameterType="String" resultType="Opentime">
+		select * from opentime where name=#{name}
+	</select>
+	
+	<insert id="addTime">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_opentime.nextval from dual
+		</selectKey>
+		insert into opentime values(#{id},#{name},#{starttime},#{endtime})
+	</insert> 
+		
+	<update id="editTime" parameterType="com.zy.bean.Opentime">
+		update opentime set name=#{name},starttime=#{starttime},endtime=#{endtime} where id=#{id}
+	</update>
+	
+	<delete id="deleteTime" parameterType="int">
+		delete from opentime where id=#{id}
+	</delete>
+</mapper>

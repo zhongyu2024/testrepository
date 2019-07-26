@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.VtjMapper">
+
+
+<!-- 1无条件查询 -->
+<select id="search1" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1
+</select>
+<!-- 2只查询时间 -->
+<select id="search2" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1
+</select>
+<!-- 3只查询会员名、卡号 -->
+<select id="search3" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%'
+</select>
+<!-- 4只查询会员类型 -->
+<select id="search4" resultType="VTJtable" parameterType="VTJSearch">
+select * from (select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1) where vtype=#{vctype}
+</select>
+<!-- 5只查询有记录的 -->
+<select id="search5" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1 where id in (select vipid from viprecord group by vipid)
+</select>
+<!--6查询时间和会员名 -->
+<select id="search6" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%'
+</select>
+<!-- 7查询时间和会员卡类型 -->
+<select id="search7" resultType="VTJtable" parameterType="VTJSearch">
+select * from(select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1) where vtype=#{vctype}
+</select>
+
+<!-- 8查询时间和有记录 -->
+<select id="search8" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1 where id in (select vipid from viprecord group by vipid)
+</select>
+
+<!-- 9查询会员名和会员卡 -->
+<select id="search9" resultType="VTJtable" parameterType="VTJSearch">
+select * from(select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%') where vtype=#{vctype}
+</select>
+
+<!-- 10查询会员名和有记录 -->
+<select id="search10" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%' and id in (select vipid from viprecord group by vipid)
+</select>
+
+<!-- 11查询会员卡类型和有记录 -->
+<select id="search11" resultType="VTJtable" parameterType="VTJSearch">
+select * from(select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1 where id in (select vipid from viprecord group by vipid)) where vtype=#{vctype}
+</select>
+<!-- 12查询时间和会员名和会员卡 -->
+<select id="search12" resultType="VTJtable" parameterType="VTJSearch">
+select * from(select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%') where vtype=#{vctype}
+</select>
+
+<!-- 13查询时间和会员名和有记录 -->
+<select id="search13" resultType="VTJtable" parameterType="VTJSearch">
+select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%' and id in (select vipid from viprecord group by vipid)
+</select>
+
+<!-- 14查询时间和会员卡和有记录 -->
+<select id="search14" resultType="VTJtable" parameterType="VTJSearch">
+select * from(select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1 where id in (select vipid from viprecord group by vipid))where  where vtype=#{vctype}
+</select>
+<!-- 15查询会员名和会员卡和有记录 -->
+<select id="search15" resultType="VTJtable" parameterType="VTJSearch">
+select * from(select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 ) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 ) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 ) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%' and id in (select vipid from viprecord group by vipid)) where vtype=#{vctype}
+</select>
+
+<!-- 16查询时间，会员名，会员卡，有记录 -->
+<select id="search16" resultType="VTJtable" parameterType="VTJSearch">
+select * from(select name as vname,(select name from vlevel where id=v1.v_level) as vtype,
+id as vcardid,(select count(*) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfnum,
+(select sum(money) from viprecord where vipid=v1.id and type=1 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as xfmoney,
+(select sum(money) from viprecord where vipid=v1.id and type=0 
+and time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) as czmoney,
+money from vip v1 where name like '%${vname}%' or id like '%${vname}%' and id in 
+(select vipid from viprecord group by vipid))where  where vtype=#{vctype}
+</select>
+
+
+<!-- 动态sql查询 -->
+	
+	<select id="findByvip" parameterType="vipShuRu" resultType="vipShuChu">
+		select * from(select (select name from vip where id=v1.vipid )as vipname,
+(select name from vlevel where id=(select v_level from vip where id=v1.vipid )) as viplevel
+,(select id from vip where id=v1.vipid) as vipid
+,(select money from viprecord where id=v1.id ) as earnmoney
+,(select type from viprecord where id=v1.id ) as xiaofei
+,(select money from vip where id=v1.vipid )as mymoney
+,(select time from viprecord where id=v1.id ) as time
+,(select name from emp where id=(select doman from viprecord where id=v1.id )) as doman
+,(select listid from viprecord where id=v1.id ) as listid
+ from viprecord v1)
+ 		<where>
+			<if test="levelname!=0">
+				and viplevel=#{levelname}<!--会员卡等级名字  -->
+			</if>
+			
+			<if test="doname!=null and doname!=''">
+				and	 doman like '%${doname}%'
+			</if>
+			
+			<if test="time1!=null and time1!=''">
+				and  time between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')
+			</if>
+			<if test="xiaofei!=2">
+				and  xiaofei =#{xiaofei}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,508 @@
+--创建表空间
+CREATE TABLESPACE canyin DATAFILE 'D:/canyin.DBF' SIZE 10M;
+--修改niuke为SYSTEM的默认表空间
+ALTER USER SYSTEM DEFAULT TABLESPACE canyin;
+--创建会员级别表
+create table vlevel(
+id int primary key,
+name varchar2(100) not null,
+count float not null,
+money float not null
+);
+--创建序列
+create sequence seq_vlevel;
+--添加数据
+insert into vlevel values(seq_vlevel.nextval,'普通会员',0.97,1000);
+insert into vlevel values(seq_vlevel.nextval,'银卡会员',0.95,2000);
+insert into vlevel values(seq_vlevel.nextval,'金卡会员',0.9,5000);
+
+--创建供应商表
+create table giver(
+id int primary key,
+name varchar2(100) not null,
+manname varchar2(100) not null,
+mantel varchar2(100) not null,
+address clob not null
+);
+--创建序列
+create sequence seq_giver;
+--添加数据
+insert into giver values(seq_giver.nextval,'天天超市','张三','15525364512','江苏省苏州市虎丘区软件园');
+insert into giver values(seq_giver.nextval,'天天超市2','李四','15525364512','江苏省苏州市虎丘区软件园');
+insert into giver values(seq_giver.nextval,'天天超市3','王五','15525364512','江苏省苏州市虎丘区软件园');
+
+--创建单位表
+create table unit(
+id int primary key,
+name varchar2(100) not null
+);
+--创建序列
+create sequence seq_unit;
+--添加数据
+insert into unit values(seq_unit.nextval,'kg');
+--创建材料类型表
+create table materialstype(
+id int primary key,
+name varchar2(100) not null
+);
+--创建序列
+create sequence seq_materialstype;
+--添加数据
+insert into materialstype values(seq_materialstype.nextval,'肉');
+insert into materialstype values(seq_materialstype.nextval,'海鲜');
+insert into materialstype values(seq_materialstype.nextval,'蔬菜');
+insert into materialstype values(seq_materialstype.nextval,'调料');
+
+--创建餐位表
+create table foodtable
+(
+       id integer primary key,
+       name varchar2(50) not null,
+       area int check(area in(0,1)),
+       seatsize int check(seatsize in(2,4,6,8,12,18)),
+       minpay float not null,
+       state int check(state in(0,1,2))
+);
+--创建序列
+create sequence seq_foodtable;
+--添加数据
+insert into foodtable values(seq_foodtable.nextval,'1号桌',0,2,0,0);
+insert into foodtable values(seq_foodtable.nextval,'2号桌',0,2,0,0);
+insert into foodtable values(seq_foodtable.nextval,'3号桌',0,2,0,0);
+insert into foodtable values(seq_foodtable.nextval,'4号桌',0,4,0,0);
+insert into foodtable values(seq_foodtable.nextval,'5号桌',0,4,0,0);
+insert into foodtable values(seq_foodtable.nextval,'6号桌',0,4,0,0);
+insert into foodtable values(seq_foodtable.nextval,'7号桌',0,6,0,0);
+insert into foodtable values(seq_foodtable.nextval,'8号桌',0,6,0,0);
+insert into foodtable values(seq_foodtable.nextval,'9号桌',0,6,0,0);
+insert into foodtable values(seq_foodtable.nextval,'10号桌',0,8,0,0);
+insert into foodtable values(seq_foodtable.nextval,'11号桌',0,8,0,0);
+insert into foodtable values(seq_foodtable.nextval,'12号桌',0,8,0,0);
+insert into foodtable values(seq_foodtable.nextval,'1号包厢',1,12,200,0);
+insert into foodtable values(seq_foodtable.nextval,'2号包厢',1,12,200,0);
+insert into foodtable values(seq_foodtable.nextval,'3号包厢',1,12,200,0);
+insert into foodtable values(seq_foodtable.nextval,'4号包厢',1,18,200,0);
+insert into foodtable values(seq_foodtable.nextval,'5号包厢',1,18,200,0);
+insert into foodtable values(seq_foodtable.nextval,'6号包厢',1,18,200,0);
+--创建职级表
+create table power
+(
+       id integer primary key,
+       name varchar2(50) not null
+);
+
+--创建序列
+create sequence seq_power;
+--添加数据
+insert into power values(seq_power.nextval,'管理员');
+insert into power values(seq_power.nextval,'收银员');
+insert into power values(seq_power.nextval,'服务员');
+insert into power values(seq_power.nextval,'外卖员');
+--创建菜系表
+create table cooktype
+(
+       id integer primary key,
+       name varchar2(50) not null
+);
+
+--创建序列
+create sequence seq_cooktype;
+--添加数据
+insert into cooktype values(seq_cooktype.nextval,'精致冷碟');
+insert into cooktype values(seq_cooktype.nextval,'精致热菜');
+insert into cooktype values(seq_cooktype.nextval,'特色小炒');
+insert into cooktype values(seq_cooktype.nextval,'川府菜肴');
+insert into cooktype values(seq_cooktype.nextval,'精品点心');
+insert into cooktype values(seq_cooktype.nextval,'酒水饮料');
+--创建仓库表
+create table cangku
+(
+       id integer primary key,
+       name varchar2(50) not null,
+       info clob
+);
+--创建序列
+create sequence seq_cangku;
+--添加数据
+insert into cangku values(seq_cangku.nextval,'1号仓库',null);
+insert into cangku values(seq_cangku.nextval,'2号仓库',null);
+insert into cangku values(seq_cangku.nextval,'3号仓库',null);
+insert into cangku values(seq_cangku.nextval,'4号仓库',null);
+insert into cangku values(seq_cangku.nextval,'5号仓库',null);
+
+--创建材料表
+
+create table materials(
+id int primary key,
+name varchar2(255) not null,
+materialstypeid int references materialstype(id) not null,
+unitid int references unit(id) not null,
+info clob
+);
+--创建序列
+create sequence seq_materials;
+--添加数据
+insert into materials values(seq_materials.nextval,'牛肉',1,1,'');
+insert into materials values(seq_materials.nextval,'猪肉',1,1,'');
+insert into materials values(seq_materials.nextval,'鸭肉',1,1,'');
+insert into materials values(seq_materials.nextval,'鸡肉',1,1,'');
+insert into materials values(seq_materials.nextval,'香菜',3,1,'');
+insert into materials values(seq_materials.nextval,'葱',3,1,'');
+insert into materials values(seq_materials.nextval,'盐',21,1,'');
+insert into materials values(seq_materials.nextval,'鸡精',21,1,'');
+insert into materials values(seq_materials.nextval,'酱油',21,1,'');
+insert into materials values(seq_materials.nextval,'辣椒',21,1,'');
+insert into materials values(seq_materials.nextval,'胡椒',21,1,'');
+insert into materials values(seq_materials.nextval,'醋',21,1,'');
+
+--创建采购入库表
+
+create table incangku(
+id varchar2(50) primary key,
+cangkuid int references cangku(id) not null,
+intime date not null,
+giverid int references giver(id) not null,
+buyman int not null,
+inman int not null,
+info clob 
+);
+
+--添加数据
+insert into incangku values('ck20171016164728',1,sysdate,1,4,5,'');
+
+--创建入库商品明细表
+
+
+create table inllist(
+id int  primary key,
+materialsid int references materials(id) not null,
+num int not null,
+price float not null,
+incangkuid varchar2(50) references incangku(id) not null
+);
+--创建序列
+create sequence seq_inllist;
+--添加数据
+insert into inllist values(seq_inllist.nextval,1,10,9,'ck20171016164728');
+
+--创建厨房库存表
+
+create table kitchenkucun(
+id int  primary key,
+materialsid int references materials(id) not null,
+num float not null
+);
+
+--创建序列
+create sequence seq_kitchenkucun;
+--添加数据
+insert into kitchenkucun values(seq_kitchenkucun.nextval,1,5);
+insert into kitchenkucun values(seq_kitchenkucun.nextval,21,1);
+insert into kitchenkucun values(seq_kitchenkucun.nextval,23,1);
+
+--创建仓库库存表
+
+create table cangkucun(
+id int  primary key,
+materialsid int references materials(id) not null,
+num float not null,
+cangkuid integer references cangku(id) not null
+);
+
+--创建序列
+create sequence seq_cangkucun;
+--添加数据
+insert into cangkucun values(seq_cangkucun.nextval,1,5,1);
+
+
+--创建清单表
+create table list
+(
+       id varchar2(100) primary key,
+       ordertime date,
+       type integer check(type in(0,1,2)),
+       state integer check(state in(0,1,2,3,4)),
+       tableid integer references foodtable(id),
+       paymoney float default 0 not null,
+       eatnum integer not null,
+       dazhemoney float not null,
+       realpay float,
+       waiterid integer,
+       cashierid integer,
+       paytime date,
+       vip integer,
+       sendman integer,
+       sendtime date,
+       sendmsg clob
+);
+
+
+--创建菜品表
+create table food
+(
+       id integer primary key,
+       name varchar2(255) not null,
+       cooktypeid integer references cooktype(id),
+       price float not null,
+       state integer check(state in(0,1))       
+);
+
+--创建清单表序列
+create sequence seq_food;
+--插入数据
+insert into food values(seq_food.nextval,'五香牛肉',1,18,1);
+insert into food values(seq_food.nextval,'面酱黄瓜',1,8,1);
+insert into food values(seq_food.nextval,'周庄一绝',1,10,1);
+insert into food values(seq_food.nextval,'原味凤爪',1,3,1);
+insert into food values(seq_food.nextval,'浓香醉鸡',1,28,1);
+insert into food values(seq_food.nextval,'啤酒鸭',2,48,1);
+insert into food values(seq_food.nextval,'农家窝窝头',2,22,1);
+insert into food values(seq_food.nextval,'西芹百合',3,15,1);
+insert into food values(seq_food.nextval,'双椒鱼头',4,48,1);
+insert into food values(seq_food.nextval,'海带排骨汤',5,18,1);
+insert into food values(seq_food.nextval,'椰奶',6,6,1);
+
+--创建出库表
+create table outcangku
+(
+       id varchar2(100) primary key,
+       cangkuid integer references cangku(id),
+       outtime date not null,
+       doman integer,
+       info clob
+);
+
+--插入数据
+insert into outcangku values('ot2017101016551',1,sysdate,1,null);
+insert into outcangku values('ot2017101016562',2,sysdate,1,null);
+insert into outcangku values('ot2017101016573',3,sysdate,2,null);
+insert into outcangku values('ot2017101016574',4,sysdate,2,null);
+
+--创建出库明细表
+
+create table outllist(
+id int primary key,
+materialsid int references materials(id) not null,
+num int not null,
+outcangkuid varchar2(100) references outcangku(id) not null
+);
+--创建序列
+create sequence seq_outllist;
+
+--创建预订表
+create table yuding
+(
+       id integer primary key,
+       name varchar2(50) not null,
+       sex integer check(sex in(0,1)),
+       tel varchar2(50) not null,
+       mannum integer not null,
+       yutime date not null,
+       baotime float not null,
+       info clob,
+       money float not null,
+       tableid integer references foodtable(id),
+       state integer check(state in(0,1,2,3)),
+       createtime date not null
+);
+
+
+--创建会员表
+create table vip
+(
+       id integer primary key,
+       tel varchar2(50) not null,
+       name varchar2(50) not null,
+       sex integer check(sex in(0,1)),
+       birthday date not null,
+       v_level integer references vlevel(id) not null,
+       pwd varchar2(50) not null,
+       state integer check (state in(0,1)),
+       money float not null,
+       createtime date not null
+);
+
+--创建序列
+create sequence seq_vipid;
+--插入数据
+insert into vip values(seq_vipid.nextval,'15580741521','王',0,to_date('1996-9-7','yyyy-mm-dd'),1,'123456',0,0,sysdate);
+insert into vip values(seq_vipid.nextval,'15345654521','王五',0,to_date('1996-9-7','yyyy-mm-dd'),2,'123456',0,0,sysdate);
+insert into vip values(seq_vipid.nextval,'15378787781','王六',1,to_date('1996-9-7','yyyy-mm-dd'),3,'123456',0,0,sysdate);
+insert into vip values(seq_vipid.nextval,'14580741521','王萨德',0,to_date('1996-9-7','yyyy-mm-dd'),1,'123456',0,0,sysdate);
+insert into vip values(seq_vipid.nextval,'14345654521','阿斯顿',0,to_date('1996-9-7','yyyy-mm-dd'),1,'123456',0,0,sysdate);
+--创建员工表
+create table emp
+(
+       id integer primary key,
+       name varchar2(50) not null,
+       username varchar2(50),
+       userpass varchar2(50),
+       powerid integer references power(id),
+       sex integer check(sex in(0,1)),
+       birthday date not null,
+       hiredate date not null,
+       tel varchar2(50) not null    
+);
+--创建员工序列
+create sequence seq_emp;
+--插入员工
+insert into emp values(seq_emp.nextval,'陈','管理员','admin123',1,0,to_date('1996-8-5','yyyy-mm-dd'),to_date('2017-8-1','yyyy-mm-dd'),'18852676223');
+insert into emp values(seq_emp.nextval,'王','收银员1','admin123',2,0,to_date('1996-8-5','yyyy-mm-dd'),to_date('2017-8-1','yyyy-mm-dd'),'18852676223');
+
+--创建会员充值消费表
+create table viprecord
+(
+       id integer primary key,
+       vipid integer references vip(id) not null,
+       time date not null,
+       type integer check(type in(0,1)),
+       listid varchar2(100) references list(id),
+       money float not null,
+       doman integer references emp(id) not null
+);
+create sequence seq_viprecord;
+--创建菜谱表
+
+create table cookbook(
+id int primary key,
+foodid int references food(id) not null,
+materialsid int references materials(id) not null,
+num float not null
+)
+--创建序列
+create sequence seq_cookbook;
+--添加数据
+insert into cookbook values(seq_cookbook.nextval,1,1,0.25);
+insert into cookbook values(seq_cookbook.nextval,1,21,0.01);
+insert into cookbook values(seq_cookbook.nextval,1,23,0.01);
+
+--创建合台记录表
+create table hetable(
+aid varchar2(100) references list(id) not null,
+bid varchar2(100) references list(id) not null,
+state int default 0 check(state in(0,1)) 
+);
+--创建特殊要求表
+create table yaoqiu(
+id int primary key,
+name varchar2(50) not null 
+);
+--创建序列
+create sequence seq_yaoqiu;
+--添加数据
+insert into yaoqiu values(seq_yaoqiu.nextval,'少放盐');
+insert into yaoqiu values(seq_yaoqiu.nextval,'多加辣');
+insert into yaoqiu values(seq_yaoqiu.nextval,'不要葱');
+
+--创建退菜理由表
+create table liyou(
+id int primary key,
+name varchar2(50) not null 
+);
+--创建序列
+create sequence seq_liyou;
+--添加数据
+insert into liyou values(seq_liyou.nextval,'顾客点错');
+insert into liyou values(seq_liyou.nextval,'菜味道不好');
+insert into liyou values(seq_liyou.nextval,'质量原因');
+
+--创建营业时段表
+create table opentime(
+id int primary key,
+name varchar2(50) not null ,
+starttime varchar2(100) not null,
+endtime varchar2(100) not null
+);
+--创建序列
+create sequence seq_opentime;
+--添加数据
+insert into opentime values(seq_opentime.nextval,'早市','06:00:00','11:00:00');
+insert into opentime values(seq_opentime.nextval,'午市','11:00:00','16:00:00');
+insert into opentime values(seq_opentime.nextval,'晚市','16:00:00','22:00:00');
+--创建清单详细表
+
+create table listinfo(
+id int primary key,
+listid varchar2(100) references list(id) not null,
+cainame varchar2(100) not null,
+num int not null,
+price float not null,
+money float not null,
+info varchar2(100) not null
+);
+--创建序列
+create sequence seq_listinfo;
+--创建牌号表
+create table waitnum(
+id int primary key,
+state int default 0 check(state in(0,1)) not null
+);
+--添加序列
+create sequence seq_waitnum start with 12;
+--添加数据
+insert into waitnum values(1,default);
+insert into waitnum values(2,default);
+insert into waitnum values(3,default);
+insert into waitnum values(4,default);
+insert into waitnum values(5,default);
+insert into waitnum values(6,default);
+insert into waitnum values(7,default);
+insert into waitnum values(8,default);
+insert into waitnum values(9,default);
+insert into waitnum values(10,default);
+insert into waitnum values(11,default);
+insert into waitnum values(seq_waitnum.nextval,default);
+
+--查询
+select * from vlevel order by id asc;
+select * from viprecord;
+select * from vip;
+select * from giver;
+select * from unit;
+select * from materialstype;
+select * from foodtable;
+select * from power;
+select * from cooktype;
+select * from cangku;
+select * from materials;
+select * from incangku;
+select * from inllist;
+select * from kitchenkucun;
+select * from cangkucun;
+select * from emp;
+select * from yuding;
+select * from outcangku;
+select * from food;
+select * from list;
+select * from cookbook;
+select * from outllist;
+select * from hetable;
+select * from yaoqiu;
+select * from liyou;
+select * from opentime;
+select * from listinfo;
+select * from waitnum;
+delete from vlevel where id>3;
+delete from viprecord where id>22;
+delete from vip where id=1;
+commit;
+
+--alter table vip modify (birthday varchar2(50));
+alter table vip rename column birthday to tmp;
+alter table vip add birthday varchar2(50);
+update vip set birthday=trim(tmp);
+alter table vip drop column tmp;
+
+insert into vip values(1,'00000000000','阿萨德',0,1,'123456',0,0,sysdate,'1999-9-9');
+insert into vip values(2,'11111111111','爱仕达',0,1,'123456',0,0,sysdate,'1996-9-7');
+insert into vip values(seq_vipid.nextval,'11111111111','阿斯顿11',0,1,'123456',0,0,sysdate,'1996-9-7');
+insert into vip values(seq_vipid.nextval,'22222222222','阿斯顿22',0,1,'123456',0,0,sysdate,'1996-9-7');
+insert into vip values(seq_vipid.nextval,'33333333333','阿斯顿33',0,1,'123456',0,0,sysdate,'1996-9-7');
+insert into vip values(seq_vipid.nextval,'44444444444','阿斯顿44',0,1,'123456',0,0,sysdate,'1996-9-7');
+insert into vip values(seq_vipid.nextval,'55555555555','阿斯顿55',0,1,'123456',0,0,sysdate,'1996-9-7');
+
+insert into viprecord values(seq_viprecord.nextval,2,to_date('2017-10-6','yyyy-mm-dd'),1,null,10451,1)
+delete from vip where id=1
+delete from viprecord where id=2
+select * from vip where v_level=1 and money between 0 and 0
+

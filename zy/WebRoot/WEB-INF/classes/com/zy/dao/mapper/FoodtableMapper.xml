@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.FoodtableMapper">
+	<select id="findAllSeat" parameterType="YudingFoodtable" resultType="YudingFoodtable">
+		select name,seatsize from foodtable 
+	</select>
+	<select id="findBySeatsize" parameterType="YudingFoodtable" resultType="YudingFoodtable">
+		select * from foodtable where seatsize=#{seatsize} 
+	</select>
+	<select id="findMoreSeat" resultType="YudingFoodtable">
+		select * from foodtable where seatsize>=8
+	</select>
+	<update id="update">
+		update yuding set state=3 where sysdate>yutime
+	</update>
+</mapper>
+

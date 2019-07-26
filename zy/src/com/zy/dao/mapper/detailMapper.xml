@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.detailMapper">
+<!--所有进库情况 -->
+<select id="ZinDetail" resultType="ZInfo"> 
+   select (select name from cangku a where i.cangkuid=a.id)as ckname,
+ i.intime as timeall,(select name from materials al where al.id=t.materialsid)as clname,
+ (select id from materials al where al.id=t.materialsid )as clid,
+ (select name from materialstype sty where id=(select al.materialstypeid from 
+ materials al where al.id=t.materialsid))as lxname,(select book.num from cookbook book 
+ where foodid=(select id from materialstype sty where id=(select al.materialstypeid from 
+ materials al where al.id=t.materialsid)) and materialsid=(select id from materials al where
+  al.id=t.materialsid))as count,(select name from unit ui where ui.id=(select unitid from materials al where al.id=t.materialsid))as dwname 
+  from incangku i join inllist t on i.id=t.incangkuid 
+ </select>
+ <!--所有出库情况 -->
+<select id="ZouDtail" resultType="ZOutinfo">
+ select  (select name from cangku oa where oc.cangkuid=oa.id)as ckname,
+ oc.outtime as timeall,(select name from materials ms where ms.id=ot.materialsid)as clname,
+ (select id from materials ms where ms.id=ot.materialsid)as clid,
+ (select name from materialstype osty where id=(select ms.materialstypeid from
+ materials ms where ms.id=ot.materialsid))as lxname,(select boo.num from cookbook boo
+ where foodid=(select id from materialstype osty where id=(select ms.materialstypeid from
+ materials ms where ms.id=ot.materialsid)) and materialsid=(select id from materials ms 
+ where ms.id=ot.materialsid))as count,(select name from unit oui where  oui.id=(select unitid from materials ms
+ where ms.id=ot.materialsid))as dwname from outcangku oc join outllist ot on ot.outcangkuid=oc.id
+ 
+</select>
+<select id="chosein" resultType="ZInfo">
+
+select *from(select (select name from cangku a where i.cangkuid=a.id)as ckname,
+ i.intime as timeall,(select name from materials al where al.id=t.materialsid)as clname,
+ (select id from materials al where al.id=t.materialsid )as clid,
+ (select name from materialstype sty where id=(select al.materialstypeid from 
+ materials al where al.id=t.materialsid))as lxname,(select book.num from cookbook book 
+ where foodid=(select id from materialstype sty where id=(select al.materialstypeid from 
+ materials al where al.id=t.materialsid)) and materialsid=(select id from materials al where
+  al.id=t.materialsid))as count,(select name from unit ui where ui.id=(select unitid from materials al where al.id=t.materialsid))as dwname 
+  from incangku i join inllist t on i.id=t.incangkuid )where timeall between to_date(#{time1},'yyyy-mm-dd') 
+  and  to_date(#{time2},'yyyy-mm-dd') and ${chose} like '%${zhi}%'
+   </select>
+<select id="choseout" resultType="ZOutinfo">
+ select *from(select(select name from cangku oa where oc.cangkuid=oa.id)as ckname,
+ oc.outtime as timeall,(select name from materials ms where ms.id=ot.materialsid)as clname,
+ (select id from materials ms where ms.id=ot.materialsid)as clid,
+ (select name from materialstype osty where id=(select ms.materialstypeid from
+ materials ms where ms.id=ot.materialsid))as lxname,(select boo.num from cookbook boo
+ where foodid=(select id from materialstype osty where id=(select ms.materialstypeid from
+ materials ms where ms.id=ot.materialsid)) and materialsid=(select id from materials ms 
+ where ms.id=ot.materialsid))as count,(select name from unit oui where  oui.id=(select unitid from materials ms
+ where ms.id=ot.materialsid))as dwname from outcangku oc join outllist ot on
+  ot.outcangkuid=oc.id ) where timeall between to_date(#{time1},'yyyy-mm-dd') and to_date(#{time2},'yyyy-mm-dd')
+   and ${chose} like '%${zhi}%'
+ 
+</select>
+<select id="choseinn">
+
+select *from(select (select name from cangku a where i.cangkuid=a.id)as ckname,
+ i.intime as timeall,(select name from materials al where al.id=t.materialsid)as clname,
+ (select id from materials al where al.id=t.materialsid )as clid,
+ (select name from materialstype sty where id=(select al.materialstypeid from 
+ materials al where al.id=t.materialsid))as lxname,(select book.num from cookbook book 
+ where foodid=(select id from materialstype sty where id=(select al.materialstypeid from 
+ materials al where al.id=t.materialsid)) and materialsid=(select id from materials al where
+  al.id=t.materialsid))as count,(select name from unit ui where ui.id=(select unitid from materials al where al.id=t.materialsid))as dwname 
+  from incangku i join inllist t on i.id=t.incangkuid )where timeall between to_date(#{time1},'yyyy-mm-dd') 
+  and  to_date(#{time2},'yyyy-mm-dd')  
+ 
+   </select>
+   
+   <select id="choseoutt">
+ select *from(select(select name from cangku oa where oc.cangkuid=oa.id)as ckname,
+ oc.outtime as timeall,(select name from materials ms where ms.id=ot.materialsid)as clname,
+ (select id from materials ms where ms.id=ot.materialsid)as clid,
+ (select name from materialstype osty where id=(select ms.materialstypeid from
+ materials ms where ms.id=ot.materialsid))as lxname,(select boo.num from cookbook boo
+ where foodid=(select id from materialstype osty where id=(select ms.materialstypeid from
+ materials ms where ms.id=ot.materialsid)) and materialsid=(select id from materials ms 
+ where ms.id=ot.materialsid))as count,(select name from unit oui where  oui.id=(select unitid from materials ms
+ where ms.id=ot.materialsid))as dwname from outcangku oc join outllist ot on
+  ot.outcangkuid=oc.id ) where timeall between to_date(#{time1},'yyyy-mm-dd') and to_date(#{time2},'yyyy-mm-dd') 
+ 
+</select>
+   
+</mapper>

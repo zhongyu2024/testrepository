@@ -1,0 +1,31 @@
+body{
+	width: 1000px;
+	margin: auto;
+	
+}
+#ckleft{
+	width:150px;
+	height:720px;
+	float:left;
+}
+.title{
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+	text-align: center;
+	color: #B6BBC3;
+	margin:auto;
+	margin-bottom: 20px;
+}
+.csd{
+	width: 150px;
+	height: 720px;
+	background: #354148;
+}
+
+#cksd{
+	margin-top: 30px;
+	border:2px solid seagreen;
+	width: 1000px;
+	height:720px;
+}

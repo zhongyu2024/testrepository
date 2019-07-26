@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.VipRecordMapper">
+	<!-- 查询历史总消费 -->
+	<select id="findAllPayMoneyById"  resultType="double" parameterType="int">
+		select sum(money) from viprecord where vipid=#{id} and type like '%1%'
+	</select>
+	
+	<!-- 查询充值记录 -->
+	<select id="findRecordById" resultType="VipRecord" parameterType="int">
+		select * from viprecord where vipid=#{id} and type=0 order by id desc
+	</select>	
+	
+	<!-- 查询消费记录 -->
+	<select id="findPayRecordById" resultType="VipRecord" parameterType="int">
+		select * from viprecord where vipid=#{id} and type=1 order by id desc
+	</select>
+							
+</mapper>

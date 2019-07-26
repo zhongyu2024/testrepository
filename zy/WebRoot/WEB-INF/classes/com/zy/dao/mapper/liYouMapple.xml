@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.liYouMapple">
+	<select id="findAll" resultType="Mode">
+		select * from liyou 
+	</select>
+	
+	<select id="findName" parameterType="String" resultType="Mode">
+		select * from liyou where name=#{name}
+	</select>
+	<insert id="addLiYou" >
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_liyou.nextval from dual
+		</selectKey>
+		insert into liyou values(#{id},#{name})
+	</insert>  
+	
+	<update id="editLiYou">
+		update liyou set name=#{name} where id=#{id}
+	</update>
+	
+	<delete id="deleteLiYou" parameterType="int">
+		delete from liyou where id=#{id}
+	</delete>
+	
+</mapper>

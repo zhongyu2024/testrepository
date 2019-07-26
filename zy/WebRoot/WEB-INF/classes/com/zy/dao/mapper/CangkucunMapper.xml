@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.CangkucunMapper">
+
+	<!--   库存信息查找(分页查找) -->
+	<select id="findByPage" resultType="Cangkucun">
+		select * from (select rownum as r,cckk.* from (select * from
+		(select ckc.id,cangkuid,ckname,ckc.materialsid,mname,mtype,ckc.num,dw from cangkucun ckc join
+		(select m1.id,m1.name as mname,(select ut.name from unit ut where m1.unitid=ut.id) 
+		as dw,(select mt.name from materialstype mt where mt.id=m1.materialstypeid)as mtype from materials m1)
+		mm on mm.id=ckc.materialsid join (select id,name as ckname from cangku )
+		ck on ck.id=ckc.cangkuid) order by id)cckk) where r 
+		between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	<!--   库存信息查找所有 -->
+	<select id="findPAll" resultType="int">
+		select count(*) from (select rownum as r,cckk.* from (select * from
+		(select ckc.id,cangkuid,ckname,ckc.materialsid,mname,mtype,ckc.num,dw from cangkucun ckc join
+		(select m1.id,m1.name as mname,(select ut.name from unit ut where m1.unitid=ut.id) 
+		as dw,(select mt.name from materialstype mt where mt.id=m1.materialstypeid)as mtype from materials m1)
+		mm on mm.id=ckc.materialsid join (select id,name as ckname from cangku )
+		ck on ck.id=ckc.cangkuid) order by id)cckk)
+	</select>
+
+	<!-- 按要求查找(第一页，1-20条信息) -->
+	<select id="findByText" resultType="Cangkucun" parameterType="CangkucunSearch">
+		select * from (select rownum as r,cckk.* from 
+		(select * from
+		(select ckc.id,cangkuid,ckname,ckc.materialsid,mname,mtype,ckc.num,dw from cangkucun ckc join
+		(select m1.id,m1.name as mname,
+		(select ut.name from unit ut where m1.unitid=ut.id) as dw,
+		(select mt.name from materialstype mt where mt.id=m1.materialstypeid)
+		as mtype from materials m1)
+		mm on mm.id=ckc.materialsid join 
+		(select id,name as ckname from cangku )
+		ck on ck.id=ckc.cangkuid where ${type} like '%${text}%') order by id)cckk) where r 
+		between (#{page}-1)*20+1 and #{page}*20
+	</select>
+	
+	<!--   库存信息查找所有 -->
+	<select id="findTAll" resultType="int">
+		select count(*) from (select rownum as r,cckk.* from 
+		(select * from
+		(select ckc.id,cangkuid,ckname,ckc.materialsid,mname,mtype,ckc.num,dw from cangkucun ckc join
+		(select m1.id,m1.name as mname,
+		(select ut.name from unit ut where m1.unitid=ut.id) as dw,
+		(select mt.name from materialstype mt where mt.id=m1.materialstypeid)
+		as mtype from materials m1)
+		mm on mm.id=ckc.materialsid join 
+		(select id,name as ckname from cangku )
+		ck on ck.id=ckc.cangkuid where ${type} like '%${text}%') order by id)cckk)
+	</select>
+</mapper>

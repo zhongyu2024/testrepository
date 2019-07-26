@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.VipMapper">
+	<select id="findAllVip"  resultType="Vip">
+		select * from vip
+	</select>
+	<!-- 查找会员是否存在 -->
+	<select id="findVip" parameterType="int" resultType="Vip">
+		select * from vip where id=#{id}
+	</select>
+
+	<select id="findByQuery"  parameterType="VipQuery" resultType="Vip">
+		select * from 
+		(select n.*,rownum r from (select * from vip
+		<where>
+			<!-- <if test="id!=0 and state==2">
+				and v_level=#{id} and money between #{min} and #{max}  order by id asc) n) where r between (#{pageno}-1)*10+1 and #{pageno}*10
+			</if>
+			<if test="id==0 and state==2" >
+				and money between #{min} and #{max}  order by id asc) n) where r between (#{pageno}-1)*10+1 and #{pageno}*10
+			</if>
+			<if test="state!=2 and id!=0">
+				and state=#{state} and v_level=#{id} and money between #{min} and #{max}  order by id asc) n) where r between (#{pageno}-1)*10+1 and #{pageno}*10
+			</if>
+ 			<if test="state!=2 and id==0">
+ 				and state=#{state} and money between #{min} and #{max}  order by id asc) n) where r between (#{pageno}-1)*10+1 and #{pageno}*10
+ 			</if> -->
+ 			<if test="min!=0 and max!=0">
+ 				and money between #{min} and #{max}
+ 			</if>
+ 			<if test="id!=0">
+ 				and v_level=#{id}
+ 			</if>
+ 			<if test="state!=2">
+ 				and state=#{state}
+ 			</if> 			
+		</where>
+		order by id desc )n)  where r between (#{pageno}-1)*10+1 and #{pageno}*10
+			
+	</select>	
+	
+	<select id="findPagenum" resultType="int">
+		select count(*) from vip
+	</select>
+	
+	<select id="findLast"  resultType="int">
+		select seq_vipid.nextval from dual
+	</select>
+	<!-- 根据id查找 -->
+	<select id="findById" resultType="Vip" parameterType="int">
+		select * from vip where id=#{id}
+	</select>
+	<!-- 根据tel查找 -->
+	<select id="findByTel" resultType="Vip" parameterType="String">
+		select * from vip where tel=#{tel}
+	</select>
+	
+	<!-- 添加会员 -->
+	<insert id="addVip" parameterType="Vip">
+		insert into vip values(#{id},#{tel},#{name},#{sex},to_date(#{birthday},'yyyy-mm-dd'),#{v_level},#{pwd},0,0,sysdate)
+	</insert>	
+	
+	<!-- 更新会员余额 -->
+	<update id="updateMoney">
+		update vip set money=money+#{money} where id=#{id}
+	</update>
+	<!-- 插入充值记录 -->
+	<insert id="addRecord" parameterType="VipRecord">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_viprecord.nextval from dual
+		</selectKey>
+		insert into viprecord values(#{id},#{vipid},sysdate,0,null,#{money},1)
+	</insert>
+	
+	<!-- 停用会员 -->
+	<update id="stopVip" parameterType="int">
+		update vip set state=1,money=0 where id=#{id}
+	</update>
+	
+	<!-- 删除会员充值消费记录 -->
+	<delete id="delVipRecord" parameterType="int">
+		delete from viprecord where vipid=#{id}
+	</delete>
+	
+	<!-- 删除会员 -->
+	<delete id="delVip" parameterType="int">
+		delete from vip where id=#{id}
+	</delete>
+	
+	<!-- 修改会员 -->
+	<update id="modiVip" parameterType="Vip">
+		update vip
+		<set>
+		  <if test="name!=null and name!=''">name=#{name},</if>
+		  <if test="tel!=null">tel=#{tel},</if>
+		  <if test="sex!=null">sex=#{sex},</if>
+		  <if test="v_level!=null">v_level=#{v_level},</if>
+		  <if test="pwd!=null and name!=''">pwd=#{pwd},</if>
+		  <if test="birthday!=null">birthday=to_date(#{birthday},'yyyy-mm-dd')</if>
+ 		</set>
+ 		where id=#{id}
+	</update>
+	
+	<select id="findlevelnameByid" parameterType="int" resultType="Vlevel">
+		select * from vlevel where id=#{value}
+	</select>
+	
+	<!-- 查找总消费的记录 -->
+	<select id="findPayMoneyId" parameterType="int" resultType="VipRecord">
+		select * from viprecord where vipid=#{value} and type=1
+	</select>
+	<!-- 查找总消费 -->
+	<select id="findPayMoney" parameterType="int" resultType="double">
+		select sum(money) from viprecord where vipid=#{value} and type=1 
+	</select>
+	
+</mapper>

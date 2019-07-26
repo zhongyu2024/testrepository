@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.InCangkuMapper">
+	<!-- 搜索全部员工 -->
+	<select id="findAllEmp" resultType="Emp">
+		select * from emp where powerid=3
+	</select>
+	
+	<!--  搜索全部供应商 -->
+	<select id="findAllGiver" resultType="Giver">
+		select * from giver
+	</select>
+	
+	<!--  搜索全部仓库 -->
+	<select id="findAllCangku" resultType="Cangku">
+		select * from cangku
+	</select>
+	
+	<!--  根据id搜索-->
+	<select id="findById" resultType="InCangku" parameterType="String">
+		select * from incangku where id=#{value}
+	</select>
+	
+	<!--  根据id搜索-->
+	<select id="findById2" resultType="InCangku" parameterType="String">
+		select * from (select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc order by intime desc)x
+    ) where id=#{value}
+	</select>
+	
+	
+	<!--  搜索全部仓库 -->
+	<select id="findByPage" resultType="InCangku" >
+	select * from (select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc order by intime desc)x
+    ) where r between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	
+	<!-- 根据条件查找相应信息 -->
+	<!-- 情况1 只搜索时间 -->
+	<select id="selectTime" parameterType="CangkucunSearch" resultType="InCangku">
+		select * from(
+      select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc  
+     order by intime desc)x where intime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')
+    ) where r between (#{page}-1)*20+1 and #{page}*20
+	</select>
+	
+	<!-- 情况2 只搜索类型和关键字 -->
+	<select id="selectType" parameterType="CangkucunSearch" resultType="InCangku">
+		select * from(
+      select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc  
+     order by intime desc)x where ${type} like '%${text}%'
+    ) where r between (#{page}-1)*20+1 and #{page}*20
+	</select>
+	
+	<!-- 情况3 都搜索 -->
+	<select id="selectAll" parameterType="CangkucunSearch" resultType="InCangku">
+		select * from(
+      select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc  
+     order by intime desc)x where ${type} like '%${text}%' and 
+     intime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss') 
+    ) where r between (#{page}-1)*20+1 and #{page}*20
+	</select>
+	<!--     -->
+	
+	
+	<!-- 搜索材料(分页) -->
+	<select id="findCailiao" resultType="Cailiao">
+	 select * from
+      (select rownum as r,mm.* from
+      (select m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from materials m order by mtypeid)mm)
+      where r between (#{page,jdbcType=INTEGER}-1)*20+1 and #{page,jdbcType=INTEGER}*20
+	</select>
+	
+	<!-- 根据要求查询材料信息  -->
+	<select id="findCailiaoByType" parameterType="CangkucunSearch" resultType="Cailiao">
+	select * from
+      (select rownum as r,mm.* from
+      (select m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from materials m order by mtypeid )mm where ${type} like '%${text}%')
+      where r between (${page}-1)*20+1 and ${page}*20
+	</select> 
+	
+	
+	<!-- 搜索材料(分页) -->
+	<select id="findAll" resultType="int">
+	 select count(*) from
+      (select rownum as r,mm.* from
+      (select m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from materials m order by mtypeid)mm)
+	</select>
+	
+	<!-- 根据要求查询材料信息  -->
+	<select id="findType" parameterType="CangkucunSearch" resultType="int">
+	select count(*) from
+      (select rownum as r,mm.* from
+      (select m.id,m.name,m.materialstypeid as mtypeid,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as mtypename,
+      m.unitid,(select u.name from unit u where u.id=m.unitid) as unitname,info 
+      from materials m order by mtypeid )mm where ${type} like '%${text}%')
+	</select> 
+	
+	<!-- 新增一条入库商品明细 -->
+	<insert id="addNewCailia" parameterType="InCailiao">
+		insert into inllist values(seq_inllist.nextval,#{materialsid},#{num},#{price},#{incangkuid})
+	</insert>
+	
+	<!-- 新增一条入库信息 -->
+	<insert id="addNewInck" parameterType="InCangku">
+		<!-- insert into incangku values(#{id},,to_date(S{intime},'yyyy-mm-dd hh24:mi:ss'),#{giverid},#{byid},#{inid},#{info}) -->
+		 insert into incangku values(#{id},#{cangkuid},to_date(#{intime},'yyyy-mm-dd hh24:mi:ss')
+      ,#{giverid},#{byid},#{inid},#{info})
+	</insert>
+	
+	<!-- 删除一条入库商品明细 -->
+	<delete id="deleteById" parameterType="int">
+		delete from inllist where id=#{value}
+	</delete>
+	
+	
+	<!-- 删除一条入库商品明细 -->
+	<delete id="deleteByMid" parameterType="String">
+		delete from inllist where incangkuid=#{value}
+	</delete>
+	
+	
+	<!--  查找入库商品明细表  -->
+	<select id="findByMid" parameterType="String" resultType="InCailiao">
+	<!--  select il.id,m.name as mname,il.num,il.price,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as typename 
+      from inllist il join materials m on il.materialsid=m.id where il.incangkuid='rk2017102310001' -->
+		select il.id,m.name as mname,il.num,il.price,
+      (select mt.name from materialstype mt where mt.id=m.materialstypeid) as typename 
+      from inllist il join materials m on il.materialsid=m.id where il.incangkuid=#{value}
+	</select>
+	
+	
+	<!-- 查找仓库库存表内是否已存在 -->
+	<select id="findCangkucnByType" parameterType="Cangkucun" resultType="Cangkucun">
+		select * from cangkucun where cangkuid=#{cangkuid} and materialsid=#{materialsid}
+	</select>
+	
+	<!-- 新增仓库库存信息 -->
+	<insert id="addNewCangkucun" parameterType="Cangkucun">
+		insert into cangkucun values(seq_cangkucun.nextval,#{materialsid},#{num},#{cangkuid})
+	</insert>
+	
+	<!-- 更新仓库库存信息 -->
+	<update id="updateNewCangkucun" parameterType="Cangkucun">
+		update cangkucun set num=num+#{num} where cangkuid=#{cangkuid} and materialsid=#{materialsid}
+	</update>
+	
+	<!--  搜索全部仓库 -->
+	<select id="findP" resultType="int" >
+	select count(*) from (select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc order by intime desc)x
+    ) 
+	</select>
+	<!-- 根据条件查找相应信息 -->
+	<!-- 情况1 只搜索时间 -->
+	<select id="selectT1" parameterType="CangkucunSearch" resultType="int">
+		select count(*) from(
+      select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc  
+     order by intime desc)x where intime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss')) 
+	</select>
+	
+	<!-- 情况2 只搜索类型和关键字 -->
+	<select id="selectT2" parameterType="CangkucunSearch" resultType="int">
+		select count(*) from(
+      select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc  
+     order by intime desc)x where ${type} like '%${text}%')
+	</select>
+	
+	<!-- 情况3 都搜索 -->
+	<select id="selectT3" parameterType="CangkucunSearch" resultType="int">
+		select count(*) from(
+      select rownum as r,x.* from
+    (select id,inc.cangkuid,(select ck.name from cangku ck where ck.id=inc.cangkuid) as ckname,intime
+    ,inc.giverid,(select g.name from giver g where g.id=inc.giverid) as givername,
+    inc.buyman as byid,(select e1.name from emp e1 where e1.id=inc.buyman) as byman
+    ,inc.inman as inid,(select e2.name from emp e2 where e2.id=inc.inman ) as inman,info from incangku inc  
+     order by intime desc)x where ${type} like '%${text}%' and 
+     intime between to_date(#{time1},'yyyy-mm-dd hh24:mi:ss') and to_date(#{time2},'yyyy-mm-dd hh24:mi:ss') )
+	</select>
+	<!--     -->
+	
+	
+	
+</mapper>

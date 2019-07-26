@@ -1,0 +1,121 @@
+#ebody{
+	 
+	width:850px;
+	height:720px;
+}
+#kuang{
+	width: 850px;
+	height: 40px;
+}
+#zsg{
+	float: left;
+	height: 40px;
+	width: 400px;
+	background-color:white; 
+	   
+}
+#hidden2{
+	position: absolute;
+	background: #cccccc;
+	z-index: 2;
+	height: 800px;
+	width: 1300px;
+	top: 0px;
+	left:0px;
+	opacity: 0.1;
+	display: none;
+	 
+}
+  
+
+/*#ck{
+	float: left;
+	height: 45px;
+	width: 100px;
+	margin-top: 10px;
+	margin-left: 10px;
+	background-color:white;
+ 
+}*/
+ 
+/*.caozuo1{
+	margin-top: 4px;
+	margin-left: 4px;
+	float: left;
+	width: 100px;
+	height: 35px;
+   
+	background-size: 35px;
+	display: block;
+ 
+}*/
+/*#ck2{
+	float: left;
+	height: 45px;
+	width: 100px;
+	margin-top: 10px;
+	margin-left: 10px;
+	background-color:white;
+	 
+}*/
+/*.caozuo2{
+    margin-top: 4px;
+	margin-left: 4px;
+	float: left;
+	width: 100px;
+	height: 35px;
+   /*background: url(../img/删除.jpg);*/
+   background-size: 35px;
+   display: block;
+}*/
+/*#ck3{
+	float: left;
+	height: 45px;
+	width: 100px;
+	margin-top: 10px;
+	margin-left: 10px;
+	background-color:white;
+	 
+}*/
+/*.caozuo3{
+	margin-top: 4px;
+	margin-left:4px;
+	float: left;
+	width: 100px;
+	height: 35px;
+    /*background: url(../img/修改.jpg);
+    background-size: 35px;
+    display: block;
+}*/
+#rsg{
+	margin-left: 0px;
+	padding-left: 160px;
+    float: left;
+   padding-top: 10px;
+	height: 30px;
+	width: 290px; 	
+}
+#search{
+	margin-top: 10px;
+	height:670px;
+}
+#list{
+	border: 1px solid red;
+	height: 30px;
+	background-color: #354148;
+}
+#hidden{
+	
+	top: 100px;
+	width: 100px;
+	height: 100px;
+	border: 1px solid cornflowerblue;
+}
+#hiddenn{
+	
+	top: 100px;
+	width: 100px;
+	height: 100px;
+	border: 1px solid cornflowerblue;
+}
+  

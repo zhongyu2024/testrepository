@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.vipSmallMapper">
+<!-- 动态sql查询 -->
+	
+	<select id="findByvip" parameterType="vipShuRu" resultType="vipShuChu">
+		select * from(select (select name from vip where id=v1.vipid )as vipname,
+(select name from vlevel where id=(select v_level from vip where id=v1.vipid )) as viplevel
+,(select id from vip where id=v1.vipid) as vipid
+,(select money from viprecord where id=v1.id ) as earnmoney
+,(select type from viprecord where id=v1.id ) as xiaofei
+,(select money from vip where id=v1.vipid )as mymoney
+,(select time from viprecord where id=v1.id ) as time
+,(select name from emp where id=(select doman from viprecord where id=v1.id )) as doman
+,(select listid from viprecord where id=v1.id ) as listid
+ from viprecord v1)
+ 		<where>
+			<if test="levelname!=null and levelname!=''">
+				and viplevel=#{levelname}<!--会员卡等级名字  -->
+			</if>
+			
+			<if test="doname!=null and doname!=''">
+				and	 doman like '%${doname}%'
+			</if>
+			
+			<if test="time1!=null and time1!=''">
+				and  time between to_date(#{time1},'yyyy-mm-dd hh-mm-ss') and to_date(#{time2},'yyyy-mm-dd hh-mm-ss')
+			</if>
+			<if test="xiaofei!=2">
+				and  xiaofei =#{xiaofei}
+			</if>
+		</where>
+	</select>
+	
+	</mapper>

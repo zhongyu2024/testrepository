@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.QingDanMapper">
+<select id="findAllOpentime" resultType="Opentime">
+	select * from opentime
+</select>
+<select id="findAllQingDan" resultType="Zlist">
+	select * from list
+</select>
+	<select id="findAlllistFenye" resultType="ZList">
+		select * from 
+		(select n.*,rownum rn from
+		(select * from  list order by ordertime desc) n)where rn between #{start} and #{end}
+	</select>
+<select id="findtableByid" parameterType="int" resultType="Foodtable">
+	select * from foodtable where id=#{value}
+</select>
+<select id="findempByid" parameterType="int" resultType="emp">
+	select * from emp where id=#{value}
+</select>
+<select id="findvipByid" parameterType="int" resultType="vip">
+	select * from vip where id=#{value}
+</select>
+<select id="findlistjuqery" parameterType="QueryQingDanFenye" resultType="Zlist">
+	select * from list 
+<!-- 	var qdtype=3;
+var qdstate=5;
+var qddate=7;
+var qdyysd=0; -->
+	<where>
+		<if test="qdtype!=3 and qdstate==5 and qdyysd==0">
+			and type=#{qdtype} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype==3 and qdstate!=5 and qdyysd==0">
+			and state=#{qdstate} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd') 
+		</if>
+		<if test="qdtype==3 and qdstate==5 and qdyysd!=0">
+			and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd') 
+		</if>
+		<if test="qdtype!=3 and qdstate!=5 and qdyysd==0">
+			and type=#{qdtype} and state=#{qdstate} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype!=3 and qdstate==5 and qdyysd!=0">
+			and type=#{qdtype} and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype==3 and qdstate!=5 and qdyysd!=0">
+			and state=#{qdstate} and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype!=3 and qdstate!=5 and qdyysd!=0">
+			and type=#{qdtype} and state=#{qdstate} and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype==3 and qdstate==5 and qdyysd==0">
+			and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+	</where>
+</select>	
+	
+<select id="getBylistFenye" parameterType="QueryQingDanFenye" resultType="ZList">
+		select * from (select n.*,rownum rn from(select * from list 
+	<where>
+		<if test="qdtype!=3 and qdstate==5 and qdyysd==0">
+			and type=#{qdtype} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype==3 and qdstate!=5 and qdyysd==0">
+			and state=#{qdstate} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd') 
+		</if>
+		<if test="qdtype==3 and qdstate==5 and qdyysd!=0">
+			and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd') 
+		</if>
+		<if test="qdtype!=3 and qdstate!=5 and qdyysd==0">
+			and type=#{qdtype} and state=#{qdstate} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype!=3 and qdstate==5 and qdyysd!=0">
+			and type=#{qdtype} and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype==3 and qdstate!=5 and qdyysd!=0">
+			and state=#{qdstate} and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype!=3 and qdstate!=5 and qdyysd!=0">
+			and type=#{qdtype} and state=#{qdstate} and (select id from opentime where ordertime between to_date(to_char(ordertime,'yyyy-mm-dd')|| starttime,'yyyy-mm-dd hh24:mi:ss') and to_date(to_char(ordertime,'yyyy-mm-dd')|| endtime,'yyyy-mm-dd hh24:mi:ss'))=#{qdyysd} and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+		<if test="qdtype==3 and qdstate==5 and qdyysd==0">
+			and ordertime between to_date('${qddate1}','yyyy/mm/dd') and to_date('${qddate2}','yyyy/mm/dd')
+		</if>
+	</where>
+		order by ordertime desc) n)where rn between #{start} and #{end}
+</select>
+<select id="findlistByid" parameterType="String" resultType="Zlist">
+	select * from list where id=#{value}
+</select>
+	<select id="findListinfo" parameterType="String" resultType="Listinfo">
+		select * from Listinfo where listid=#{value}
+	</select>
+<select id="findAlljiezhang" parameterType="String" resultType="Hetable">
+	select * from Hetable where  bid=#{value}
+</select>
+	<select id="findhetableByBid" parameterType="String" resultType="Hetable">
+		select * from hetable  where bid=#{value} and state=0
+	</select>
+</mapper>

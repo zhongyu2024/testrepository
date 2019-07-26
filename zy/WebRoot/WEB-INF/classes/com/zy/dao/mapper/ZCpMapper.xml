@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.ZCpMapper">
+<!--所有菜系信息-->
+   <select id="findcaipustyle" resultType="Cooktype"> 
+   select * from cooktype
+   </select>
+   <!--初始信息-->
+   <select id="findfood" resultType="Food"> 
+     select *from food where cooktypeid=(select id from cooktype where name like '精致冷碟')
+   </select>
+   <!--初始小菜详细信息-->
+   <select id="findAllcshi" resultType="ZCaipudetail"> 
+  select du.*from(select rownum as dei, k.id,(select name from materials p where p.id=k.materialsid)as n, materialsid,num,
+ (select name  from materialstype e where e.id=(select materialstypeid from materials p where p.id=k.materialsid))as j from cookbook  k join food d
+on d.id=k.foodid  where  d.name like '五香牛肉')du where dei between  18*(#{no}-1)+1 and #{no}*18
+   </select>
+   <!--所有小菜详细信息-->
+   <select id="findAllcl" resultType="ZCaipudetail"> 
+select du.*from(select rownum as dei, k.id,
+ (select name from materials p where p.id=k.materialsid)as n,(select info from materials p where p.id=k.materialsid)as w, materialsid,num,
+ (select name  from materialstype e where e.id=(select materialstypeid from materials p where p.id=k.materialsid))as 
+ j,(select name  from unit u  where u.id=(select unitid from materials p where p.id=k.materialsid))as es from cookbook 
+  k join food d on d.id=k.foodid  where  d.name like '%${name}%')du where dei between  18*(#{no}-1)+1 and #{no}*18
+   </select>
+     <!--对应菜品-->
+   <select id="findfoodc" resultType="Food"> 
+   select *from food where cooktypeid=(select id from cooktype where name like '%${caipin}%')
+   </select>
+    <!--按条件查询菜谱对应材料信息ID-->
+    <select id="tiaojiancaipuInfoId" resultType="ZCaipudetail">   
+   select du.*from(select rownum as dei, k.id,(select name from materials p where p.id=k.materialsid )as n,
+   materialsid,num,(select name  from materialstype e where e.id=(select materialstypeid from materials p where p.id=k.materialsid))as j from cookbook  k join food d
+   on d.id=k.foodid  where  d.name like '%${caiming}%' and k.id like '%${ycliao}%')du
+   </select>
+   <!--按条件查询菜谱对应材料信息NAME-->
+   <select id="tiaojiancaipuInfoName" resultType="ZCaipudetail"> 
+  select du.* from (select rownum as dei,k.id,p.name as n,materialsid,num ,e.name as j from cookbook  k join food d on
+ d.id=k.foodid join materials p on p.id=k.materialsid join materialstype e on p.materialstypeid=e.id where p.name like '%${mohul}%' 
+ and  d.name like '%${caiming}%')du where dei between  18*(#{no}-1)+1 and #{no}*18                                        
+   </select>
+     <!--所有材料-->
+     <select id="findAllycee" resultType="Ycldetaisecond"> 
+        select name from materials;
+   </select>  
+    <!--指定菜品添加材料-->
+   <insert id="addcaipushicai" > 
+    insert into cookbook values(seq_cookbook.nextval,#{foodid},#{materialsid},#{num})
+   </insert>
+  <!--指定菜品状态-->
+   <update id="updatepushi" > 
+    update food set state=1 where name=#{caipinmin}
+   </update>
+    <!--指定菜品状态-->
+   <update id="updatepushi2" > 
+    update food set state=0 where name=#{caipinmin1}
+   </update>
+    <!-- 删除指定菜品 的原材料 -->
+   <delete id="delecaipuycl">
+   delete from cookbook where id=#{id}
+   </delete>
+   <!--修改菜品原材料-->
+   <update id="xiugai"  > 
+     update cookbook set foodid=#{foodid},materialsid=#{materialsid},num=#{num} where id=#{id}
+   </update>
+     <!--可选用用材料-->
+     <select id="dately" resultType="Ycldetaisecond"> 
+      select *from( select s.id, s.name ,t.name as dwnamew,d.name as cln,s.info as inftion  from materials s  
+       join unit t on t.id=s.unitid join materialstype d  on  d.id=s.materialstypeid) 
+         where id in (select id from materials where id not
+           in( select materialsid from cookbook where foodid=#{id}))
+   </select>
+    
+</mapper>

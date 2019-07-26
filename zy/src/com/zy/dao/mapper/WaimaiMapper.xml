@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.WaimaiMapper">
+	<select id="getAllFood" resultType="Food">
+		select * from food where state=1
+	</select>
+	<select id="getByState" parameterType="int" resultType="Waitnum">
+		select * from Waitnum where state=#{value}
+	</select>
+	
+	<select id="getAllCookType" resultType="Mode">
+		select * from cooktype
+	</select>
+	<select id="getAllYaoqiu" resultType="Mode">
+		select * from yaoqiu
+	</select>
+	
+	<select id="getByType" parameterType="int" resultType="Food">
+		select * from food where cooktypeid=#{value}
+	</select>
+	
+	<select id="getCaipuByFoodid" parameterType="int" resultType="CookBook">
+		select * from cookbook where foodid=#{value}
+	</select>
+	
+	<select id="getByMaterialsid" parameterType="int" resultType="Kitchenkucun">
+		select * from kitchenkucun where materialsid=#{value}
+	</select>
+	
+	<select id="getByName" parameterType="String" resultType="Food">
+		select * from Food where name=#{value}
+	</select>
+	
+	<update id="updateKucun">
+		update kitchenkucun set num=num-#{num} where materialsid=#{id}
+	</update>
+
+    
+    <insert id="addlistinfo" parameterType="java.util.List">
+		insert into listinfo (id, listid,cainame,num, price,money,info)
+		select seq_listinfo.nextval,m.* from (
+	  	<foreach collection="list" item="listinfo" index="index" separator="union all" >
+	      (select  #{listinfo.listid},
+             #{listinfo.cainame},
+             #{listinfo.num},
+             #{listinfo.price},
+             #{listinfo.money},
+             #{listinfo.info} from dual)
+	    </foreach>
+	    )m
+	</insert>
+	
+	<insert id="addList" parameterType="Zlist">
+		insert into list(id,ordertime,type,state,tableid,paymoney,eatnum,sendmsg) 
+		values(#{id},to_date(#{ordertime},'yyyy-mm-dd hh24:mi:ss'),#{type},#{state},#{tableid},#{paymoney},#{eatnum},#{sendmsg})
+	</insert>
+	<update id="updatelistpaisong" parameterType="ZList">
+		update list set sendman=#{sendman} ,sendtime=to_date(#{sendtime},'yyyy-mm-dd hh24:mi:ss') where id=#{id}
+	</update>
+    <select id="getListByid" parameterType="String" resultType="Zlist">
+    	select * from list where id=#{value}
+    </select>
+    
+    <select id="getvip" parameterType="String" resultType="Vip">
+    	select v.*,(select name from vlevel vl where vl.id=v.v_level) v_levelname,(select count from vlevel vl where vl.id=v.v_level) v_count  from vip v where tel=#{value}
+    </select>
+    
+    <insert id="addviprecord" parameterType="VipRecord">
+    	insert into viprecord values(seq_viprecord.nextval,#{vipid},sysdate,#{type},#{listid},#{money},#{doman})
+    </insert>
+    <update id="editvip">
+    	update vip set money=money-#{money} where id=#{id}
+    </update>
+    
+    <update id="editlist" parameterType="Zlist">    
+    	update list    
+	    <set>    
+	        <if test="vip != 0">    
+	            vip = #{vip},    
+	        </if>    
+	        <if test="dazhemoney != 0">    
+	            dazhemoney = #{dazhemoney},    
+	        </if>    
+	        realpay=#{realpay},
+	        state=1,
+	        cashierid=#{cashierid},
+	        paytime=sysdate    
+	    </set>    
+   		 where id = #{id}    
+	</update> 
+	<update id="updatewaitnum">
+		update waitnum set state=#{state} where id=#{tableid}
+	</update>
+	
+	<select id="getlistBystateAndType" resultType="ZList">
+		select * from list where type=#{type} and state=#{state}
+	</select>
+	<select id="getlistBystateAndType1" resultType="ZList">
+		select * from list where type=#{type} and state=#{state} and id not in (select listid from sendrecord where state=0)
+	</select>
+	<select id="getlistBystateAndType2" resultType="ZList">
+		select * from list where type=#{type} and state=#{state} and id  in (select listid from sendrecord where state=0)
+	</select>
+	
+	<select id="getlistBystateAndTypeAndFenye" resultType="ZList">
+		select * from 
+		(select n.*,rownum rn from
+		(select * from  list where type=#{type} and state=#{state} order by ordertime desc) n)where rn between #{start} and #{end}
+	</select>
+	<select id="getlistBystateAndTypeAndFenye1" resultType="ZList">
+		select * from 
+		(select n.*,rownum rn from
+		(select * from  list where type=#{type} and state=#{state} and id not in (select listid from sendrecord where state=0) order by ordertime desc) n)where rn between #{start} and #{end}
+	</select>
+	<select id="getlistBystateAndTypeAndFenye2" resultType="ZList">
+		select * from 
+		(select n.*,rownum rn from
+		(select * from  list where type=#{type} and state=#{state} and id  in (select listid from sendrecord where state=0) order by ordertime desc) n)where rn between #{start} and #{end}
+	</select>
+	
+	<select id="gtebylistid" parameterType="String" resultType="Listinfo">
+		select * from listinfo where listid=#{value}
+	</select>
+	<update id="editlistzuofei" parameterType="String">
+		update list set state=2 where id=#{value}
+	</update>
+	
+	<select id="getBywaitnum" parameterType="int" resultType="ZList">
+		select * from list where type=1 and state=4 and tableid=#{value}
+	</select>
+	
+	<select id="getBytimeFenye" parameterType="QueryTime" resultType="ZList">
+		select * from (select n.*,rownum rn from(select * from list 
+		<where>
+			 and type=2
+			 and state=4			
+			<if test="start!=0 or end!=0">
+				and (sysdate-ordertime)*24*60*60 between #{start} and #{end}
+			</if>
+		</where>
+		order by ordertime desc) n)where rn between #{start1} and #{end1}
+	</select>
+	<select id="getBytimeAll" parameterType="QueryTime" resultType="ZList">
+		select * from list 
+		<where>
+			 and type=2
+			 and state=4			
+			<if test="start!=0 or end!=0">
+				and (sysdate-ordertime)*24*60*60 between #{start} and #{end}
+			</if>
+		</where>		
+	</select>
+	<select id="getpaisongman" resultType="Emp">
+		select * from emp where powerid=4
+	</select>
+	
+	<select id="getmannum" parameterType="String" resultType="int">
+		select count(*) from sendrecord where manname=#{value} and state=0
+	</select>
+	
+	<select id="getByid" parameterType="int" resultType="Emp">
+		select * from emp where id=#{value}
+	</select>
+	<insert id="addSendRecord" parameterType="SendRecord">
+		insert into sendrecord values(#{listid},#{manname},#{state})
+	</insert>
+	
+	<update id="editsendrecord" parameterType="String">
+		update sendrecord set state=1 where listid=#{value}
+	</update>
+</mapper>

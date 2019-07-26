@@ -1,0 +1,44 @@
+#kbody{
+	 
+	width:850px;
+	height:720px;
+}
+#kuang{
+	width: 850px;
+	height: 40px;
+}
+#zsg{
+	float: left;
+	height: 40px;
+	width: 400px;
+	background-color:white; 	   
+} 
+#rsg{
+	margin-left: 0px;
+	padding-left: 160px;
+    float: left;
+   padding-top: 10px;
+	height: 30px;
+	width: 290px; 	
+}
+#search{
+	margin-top: 10px;
+	height:670px;
+}
+#list{
+	border: 1px solid red;
+	height: 30px;
+	background-color: #354148;
+}
+ #z{
+ 	float:left;
+ 	width: 170px;
+  
+ } 
+ #y{
+ 	float:left;
+ 	width: 170px;
+ 	 
+ 	
+ }
+ 

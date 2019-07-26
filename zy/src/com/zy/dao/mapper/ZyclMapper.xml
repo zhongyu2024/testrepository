@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.ZyclMapper">
+<!--所有原材料信息-->
+   <select id="findAllcl" resultType="ZcaiLiaoDetail"> 
+  select m.*from(select  rownum as r,s.id as clid,s.name as lxname,e.name as cpname,t.name as danweiname,s.info as cailinfo from materials s join materialstype e on s.materialstypeid=e.id join 
+unit t on s.unitid=t.id )m where r between  18*(#{no}-1)+1 and #{no}*18
+   </select>
+   <!--所有原材料信息总数-->
+   <select id="findAllc" resultType="int"> 
+ select count(*)from (select  rownum as r,s.id as clid,s.name as lxname,e.name as cpname,t.name as danweiname,s.info as cailinfo from materials s join materialstype e on s.materialstypeid=e.id join 
+unit t on s.unitid=t.id) 
+   </select>
+<!--添加原材料信息-->
+   <insert id="addYcl"  >
+    insert into materials values(seq_materials.nextval,#{lxname},(select id from materialstype  where  name=#{cpname}),(select id from unit where  name=#{danweiname}),#{cailinfo})
+   </insert>
+   <!--删除原材料信息-->
+   <delete id="deleYcl"  >   
+        delete from materials WHERE id=#{id}
+   </delete>
+   <!--修改原材料信息-->
+  <update id="xiugaiclInfo"  parameterType="ZcaiLiaoDetail"> 
+      update materials set name=#{lxname},materialstypeid=(select id from materialstype  where  name=#{cpname}),unitid=(select id from unit where  name=#{danweiname}),info=#{cailinfo} where id=#{clid}   
+   </update>
+   <!--按条件查询原材料信息-->
+    <select id="tiaojianyclInfoId" resultType="ZcaiLiaoDetail">  
+    select m.*from(select  rownum as r,s.id as clid,s.name as lxname,e.name as cpname,t.name as danweiname,s.info as cailinfo from materials s join materialstype e on s.materialstypeid=e.id join 
+     unit t on s.unitid=t.id   where s.id like '%${ycliao}%' )m where r between  18*(#{no}-1)+1 and #{no}*18
+   </select>
+   <!--按条件查询原材料信息-->
+    <select id="tiaojianyclInfoIdCount" resultType="int">  
+     select  count(*) from(select  rownum as r,s.id as clid,s.name as lxname,e.name as cpname,t.name as danweiname,s.info as cailinfo from materials s join materialstype e on s.materialstypeid=e.id join 
+     unit t on s.unitid=t.id where s.id like '%${ycliao}%' )m  
+   </select>
+    
+   <select id="tiaojianyclInfoName" resultType="ZcaiLiaoDetail"> 
+  select m.*from(select  rownum as r,s.id as clid,s.name as lxname,e.name as cpname,t.name as danweiname,s.info as cailinfo from materials s join materialstype e on s.materialstypeid=e.id join 
+     unit t on s.unitid=t.id  where s.name like  '%${nameycl}%')m where r between  18*(#{no}-1)+1 and #{no}*18                                          
+   </select>
+   <select id="tiaojianyclInfoNameCount" resultType="int"> 
+   select count(*) from(select  rownum as r,s.id as clid,s.name as lxname,e.name as cpname,t.name as danweiname,s.info as cailinfo from materials s join materialstype e on s.materialstypeid=e.id join 
+     unit t on s.unitid=t.id  where s.name like  '%${nameycl}%' )m                                           
+   </select>
+   
+    <!--查询原材料类型信息-->
+   <select id="findAllscstyle" resultType="Materialstype"> 
+     select * from materialstype
+   </select>
+   <!--查询原材料单位信息-->
+    <select id="findAllscdanwei" resultType="Unit"> 
+    select * from unit
+   </select>
+   <!--添加类型信息-->
+   <insert id="addleixing" parameterType="String" >
+     insert into materialstype values(seq_materialstype.nextval,#{value})
+   </insert>
+   <!--添加单位信息-->
+   <insert id="adddangwei" parameterType="String" >
+     insert into unit values(seq_unit.nextval,#{value})
+   </insert>
+   <select id="chazhaochongmign" resultType="Materials">
+     select *from  materials where name=#{name} 
+   </select>
+    <select id="chazmetype" resultType="Materialstype">
+      select *from materialstype where name=#{name} 
+   </select> 
+    <select id="chazmdangwei" resultType="Unit">
+       select * from unit where name=#{name} 
+   </select>
+   
+   
+   
+  
+</mapper>

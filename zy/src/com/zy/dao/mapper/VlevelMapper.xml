@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.dao.mapper.VlevelMapper">
+	<select id="findAllLevel"  resultType="Vlevel">
+		select * from vlevel order by id asc
+	</select>
+	
+	<insert id="addLevel" parameterType="Vlevel">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select seq_vlevel.nextval from dual
+		</selectKey>
+		insert into vlevel values(#{id},#{name},#{count},#{money})
+	</insert>
+	<select id="findLevelById"  resultType="Vlevel" parameterType="int">
+		select * from vlevel where id=#{id}
+	</select>
+	<delete id="delLevel" parameterType="int">
+		delete from vlevel where id=#{id}
+	</delete>
+	<!-- 修改会员级别 -->
+	<update id="xiuLevel" parameterType="Vlevel">
+		update vlevel
+		<set>
+		  <if test="name!=null">name=#{name},</if>
+		  <if test="count!=null">count=#{count},</if>
+		  <if test="money!=null">money=#{money},</if>
+ 		</set>
+ 		where id=#{id}
+	</update>
+	<select id="queryMoney" parameterType="int" resultType="double">
+		select money from vlevel where id=#{id}
+	</select>	
+</mapper>
+
